@@ -3,18 +3,18 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const config = require('config');
 const { check, validationResult } = require('express-validator');
+const db = require('../database/mongoDB');
 
-const User = require('../models/User');
 const router = Router();
 
 router.post(
   '/register',
-  [
+  /* [
     check('email', 'Некорректный email.').isEmail(),
     check('password', 'Слишком короткий пароль (минимум 6 символов).').isLength(
       { min: 6 },
     ),
-  ],
+  ], */
   async (req, res) => {
     try {
       const validatorErrors = validationResult(req);
@@ -24,8 +24,8 @@ router.post(
           message: 'Некорректные данные при регистрации.',
         });
       }
-      const { email, password } = req.body;
-      const candidate = await User.findOne({ email });
+      const { email, name, password } = req.body;
+      const candidate = await db.findUser(email);
 
       if (candidate) {
         return res
@@ -33,8 +33,7 @@ router.post(
           .json({ message: 'Такой пользователь уже существует.' });
       }
       const hashedPassword = await bcrypt.hash(password, 10);
-      const user = new User({ email, password: hashedPassword });
-      await user.save();
+      await db.createUser(email, name, hashedPassword);
       res.status(201).json({ message: 'Пользователь создан.' });
     } catch (err) {
       console.log(err.message);
@@ -65,7 +64,7 @@ router.post(
       }
 
       const { email, password } = req.body;
-      const user = await User.findOne({ email });
+      const user = await db.findUser(email);
       if (!user) {
         return res.status(400).json({ message: 'Ошибка авторизации.' });
       }
@@ -78,8 +77,11 @@ router.post(
       const token = jwt.sign({ userID: user.id }, config.get('jwtSecret'), {
         expiresIn: '1h',
       });
-
-      res.json({ token, userID: user.id, message: 'Успешный вход в систему' });
+      res.json({
+        token,
+        userName: user.name,
+        message: 'Успешный вход в систему',
+      });
     } catch (e) {
       console.log(err.message);
       res.status(500).json({ message: 'Ошибка сервера.' });
