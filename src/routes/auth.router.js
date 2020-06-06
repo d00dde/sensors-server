@@ -9,12 +9,12 @@ const router = Router();
 
 router.post(
   '/register',
-  /* [
+  [
     check('email', 'Некорректный email.').isEmail(),
     check('password', 'Слишком короткий пароль (минимум 6 символов).').isLength(
       { min: 6 },
     ),
-  ], */
+  ],
   async (req, res) => {
     try {
       const validatorErrors = validationResult(req);

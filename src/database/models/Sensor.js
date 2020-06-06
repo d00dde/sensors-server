@@ -1,8 +1,15 @@
 const { Schema, model, Types } = require('mongoose');
+const Event = require('./Event').schema;
 
 const schema = new Schema({
-  id: { type: String, required: true },
-  events: [{ type: Types.ObjectId, ref: 'Event' }],
+  description: { type: String, required: true },
+  channels: [
+    {
+      channel: { type: String, required: true },
+      address: { type: String, required: true },
+    },
+  ],
+  events: [Event],
   owner: { type: Types.ObjectId, ref: 'User' },
 });
 

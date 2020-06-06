@@ -7,7 +7,7 @@ const PORT = config.get('port') || 5000;
 
 app.use(express.json({ extended: true }));
 app.use('/api/auth', require('./routes/auth.router'));
-// app.use('/api', require('./routes/frontend.router'));
+app.use('/sensor', require('./routes/frontend.router'));
 // app.use('/tech/sensor', require('./routes/sensor.router'));
 
 db.init().then(() => {
