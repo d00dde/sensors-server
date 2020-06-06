@@ -36,7 +36,6 @@ module.exports = {
     return await Sensor.find({ owner: userID });
   },
   addSensor: async (description, channels, userID) => {
-    console.log(channels);
     const sensor = new Sensor({
       description,
       channels,
@@ -47,12 +46,15 @@ module.exports = {
   },
   updateSensor: async (id, description, channels) => {
     const sensor = await Sensor.findById(id);
+    if (!sensor) return false;
     sensor.description = description;
     sensor.channels = channels;
     await sensor.save();
+    return true;
   },
   deleteSensor: async (_id) => {
-    await Sensor.deleteOne({ _id });
-    console.log(_id, ' deleted');
+    const resp = await Sensor.deleteOne({ _id });
+    if (resp.deletedCount) return true;
+    return false;
   },
 };
