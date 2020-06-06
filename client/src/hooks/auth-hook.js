@@ -1,15 +1,14 @@
 import { useState, useCallback, useEffect } from 'react';
-
+import { useDispatch } from 'react-redux';
+import { setTokenAndName } from '../redux/actions';
 const storageName = 'userData';
 
 export const useAuth = () => {
-  const [token, setToken] = useState(null);
   const [ready, setReady] = useState(false);
-  const [userName, setUserName] = useState(null);
+  const dispatch = useDispatch();
 
   const login = useCallback((jwtToken, name) => {
-    setToken(jwtToken);
-    setUserName(name);
+    dispatch(setTokenAndName(jwtToken, name));
     localStorage.setItem(
       storageName,
       JSON.stringify({
@@ -20,8 +19,7 @@ export const useAuth = () => {
   }, []);
 
   const logout = useCallback(() => {
-    setToken(null);
-    setUserName(null);
+    dispatch(setTokenAndName(null, null));
     localStorage.removeItem(storageName);
   }, []);
 
@@ -33,5 +31,5 @@ export const useAuth = () => {
     setReady(true);
   }, [login]);
 
-  return { login, logout, token, userName, ready };
+  return { login, logout, ready };
 };
