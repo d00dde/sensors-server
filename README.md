@@ -1,1 +1,1 @@
-emergency-assistant
+Sensors server
