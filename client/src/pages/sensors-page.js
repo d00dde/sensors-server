@@ -50,6 +50,7 @@ export default () => {
       const response = await request('/sensor/add', 'POST', data, {
         Authorization: `Bearer ${token}`,
       });
+      console.log(response);
     } catch (e) {
       console.log(e.message);
     }
@@ -87,13 +88,13 @@ export default () => {
     <>
       <h2>{userName}</h2>
       <AddButton onClick={addHandler}>Add</AddButton>
-      {!loading && sensors && (
-        <SensorsList
-          sensors={sensors}
-          updateHandler={updateHandler}
-          deleteHandler={deleteHandler}
-        />
-      )}
+      { !loading
+        && sensors
+        && <SensorsList
+        sensors={sensors}
+        updateHandler={updateHandler}
+        deleteHandler={deleteHandler}
+        />}
     </>
   );
 };

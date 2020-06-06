@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useHttp } from '../hooks/http-hook';
-// import { AuthContext } from '../context/auth-context';
-import { useAuth } from '../hooks/auth-hook';
+import { AuthContext } from '../context/auth-context';
 import styled from 'styled-components';
 
 const AuthPage = styled.div`
@@ -52,7 +51,7 @@ const GreenButton = styled(Button)`
 `;
 
 export default () => {
-  const { login } = useAuth();
+  const auth = useContext(AuthContext);
   const { loading, error, request, clearErrors } = useHttp();
   const [form, setForm] = useState({
     email: '',
@@ -84,7 +83,8 @@ export default () => {
       };
       const data = await request('/api/auth/login', 'POST', { ...dummyForm });
       // message(data.message);
-      login(data.token, data.userName);
+      console.log(data.token, data.userName);
+      auth.login(data.token, data.userName);
     } catch (error) {}
   };
 
