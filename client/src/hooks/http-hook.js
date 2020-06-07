@@ -10,10 +10,11 @@ export const useHttp = () => {
         if (body) {
           body = JSON.stringify(body);
           headers['Content-type'] = 'application/json';
+          headers['Origin'] = 'http://localhost:3000';
         }
         console.log('before request', body);
         setLoading(true);
-        const response = await fetch(url, { method, body, headers });
+        const response = await fetch('http://localhost:5000' + url, { method, body, headers });
         console.log('after request', response);
         const data = await response.json();
 

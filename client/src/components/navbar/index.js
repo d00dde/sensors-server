@@ -1,8 +1,8 @@
 import React, { useContext } from 'react';
 import { NavLink, useHistory } from 'react-router-dom';
-import { AuthContext } from '../../context/auth-context';
-// import './navbar.css';
+import { useAuth } from '../../hooks/auth-hook';
 import styled from 'styled-components';
+
 const Wrapper = styled.nav`
   /*height: 50px;*/
   display: flex;
@@ -29,12 +29,12 @@ const Logout = styled.a`
 `;
 
 export default () => {
-  const auth = useContext(AuthContext);
+  const { logout } = useAuth();
   const history = useHistory();
 
   const logoutHandler = (e) => {
     e.preventDefault();
-    auth.logout();
+    logout();
     history.push('/');
   };
 

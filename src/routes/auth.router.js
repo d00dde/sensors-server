@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const config = require('config');
 const { check, validationResult } = require('express-validator');
-const db = require('../database/mongoDB');
+const db = require('../database');
 const catchErrors = require('../utils').catchErrors;
 
 const router = Router();

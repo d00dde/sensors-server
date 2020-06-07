@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import Loader from '../components/loader';
 import SensorsList from '../components/sensors-list';
-import { AuthContext } from '../context/auth-context';
+import { useSelector } from 'react-redux';
 import { useHttp } from '../hooks/http-hook';
 import styled from 'styled-components';
 
@@ -23,15 +23,21 @@ const AddButton = styled.div`
 export default () => {
   const [sensors, setSensors] = useState([]);
   const { request, loading } = useHttp();
-  const { token, userName } = useContext(AuthContext);
+  const { token, userName } = useSelector((state) => {
+    return {
+      token: state.token, 
+      userName: state.userName,
+    };
+  });
 
   useEffect(() => {
     async function getSensors() {
       try {
+        console.log(token);
         const response = await request('/sensor', 'GET', null, {
           Authorization: `Bearer ${token}`,
         });
-        console.log(response);
+        
         setSensors(response);
       } catch (err) {}
     }

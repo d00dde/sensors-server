@@ -1,6 +1,6 @@
 const { Router } = require('express');
 const auth = require('../middlewares/auth.middleware');
-const db = require('../database/mongoDB');
+const db = require('../database');
 const catchErrors = require('../utils').catchErrors;
 
 const router = Router();
