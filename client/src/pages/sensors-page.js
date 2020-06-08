@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import Loader from '../components/loader';
 import SensorsList from '../components/sensors-list';
-import { AuthContext } from '../context/auth-context';
+import { useSelector } from 'react-redux';
 import { useHttp } from '../hooks/http-hook';
 import styled from 'styled-components';
 
@@ -23,15 +23,20 @@ const AddButton = styled.div`
 export default () => {
   const [sensors, setSensors] = useState([]);
   const { request, loading } = useHttp();
-  const { token, userName } = useContext(AuthContext);
+  const { token, userName } = useSelector((state) => {
+    return {
+      token: state.token, 
+      userName: state.userName,
+    };
+  });
 
   useEffect(() => {
     async function getSensors() {
       try {
-        const response = await request('/sensor', 'GET', null, {
+        const response = await request('/user', 'GET', null, {
           Authorization: `Bearer ${token}`,
         });
-        console.log(response);
+        
         setSensors(response);
       } catch (err) {}
     }
@@ -47,7 +52,7 @@ export default () => {
           { channel: 'tel', address: '+380972074557' },
         ],
       };
-      const response = await request('/sensor/add', 'POST', data, {
+      const response = await request('/user/add', 'POST', data, {
         Authorization: `Bearer ${token}`,
       });
       console.log(response);
@@ -64,7 +69,7 @@ export default () => {
           { channel: 'tel', address: '+380972074557' },
         ],
       };
-      await request(`/sensor/${_id}`, 'PUT', data, {
+      await request(`/user/${_id}`, 'PUT', data, {
         Authorization: `Bearer ${token}`,
       });
     } catch (e) {
@@ -73,7 +78,7 @@ export default () => {
   };
   const deleteHandler = async (_id) => {
     try {
-      await request(`/sensor/${_id}`, 'DELETE', null, {
+      await request(`/user/${_id}`, 'DELETE', null, {
         Authorization: `Bearer ${token}`,
       });
     } catch (e) {
