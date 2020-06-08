@@ -6,4 +6,7 @@ const schema = new Schema({
   sensor: { type: Types.ObjectId, ref: 'Sensor' },
 });
 
-module.exports = model('Event', schema);
+module.exports = {
+  model: model('Event', schema),
+  schema,
+};
