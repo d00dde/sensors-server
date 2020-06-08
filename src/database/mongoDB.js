@@ -26,7 +26,12 @@ module.exports = {
     return await User.findOne({ email });
   },
   createUser: async (email, name, hashedPassword) => {
-    const user = new User({ email, name, password: hashedPassword });
+    const user = new User({ 
+      email,
+      name,
+      role: 'user',
+      password: hashedPassword 
+    });
     await user.save();
   },
   getSensor: async (id) => {
@@ -55,6 +60,22 @@ module.exports = {
   deleteSensor: async (_id) => {
     const resp = await Sensor.deleteOne({ _id });
     if (resp.deletedCount) return true;
+    return false;
+  },
+  isAdmin: async (userID) => {
+    const user = await User.findById(userID);
+    if(!user)
+      return false;
+    if(user.role === 'admin' || user.role === 'master')
+      return true;
+    return false;
+  },
+  isMaster: async (userID) => {
+    const user = await User.findById(userID);
+    if(!user)
+      return false;
+    if(user.role === 'master')
+      return true;
     return false;
   },
 };

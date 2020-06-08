@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const auth = require('../middlewares/auth.middleware');
+const userAuth = require('../middlewares/user.middleware');
 const db = require('../database');
 const catchErrors = require('../utils').catchErrors;
 
@@ -16,7 +16,7 @@ const responseHandler = (isExist, res, data = null) => {
 
 router.post(
   '/add',
-  auth,
+  userAuth,
   catchErrors(async (req, res) => {
     const sensor = await db.addSensor(
       req.body.description,
@@ -28,7 +28,7 @@ router.post(
 );
 router.put(
   '/:id',
-  auth,
+  userAuth,
   catchErrors(async (req, res) => {
     const isUpdated = await db.updateSensor(
       req.params.id,
@@ -40,7 +40,7 @@ router.put(
 );
 router.delete(
   '/:id',
-  auth,
+  userAuth,
   catchErrors(async (req, res) => {
     const isDeleted = await db.deleteSensor(req.params.id);
     responseHandler(isDeleted, res);
@@ -48,7 +48,7 @@ router.delete(
 );
 router.get(
   '/',
-  auth,
+  userAuth,
   catchErrors(async (req, res) => {
     const sensors = await db.getAllSensors(req.user.userID);
     responseHandler(true, res, sensors);
@@ -56,7 +56,7 @@ router.get(
 );
 router.get(
   '/:id',
-  auth,
+  userAuth,
   catchErrors(async (req, res) => {
     const sensor = await db.getSensor(req.params.id);
     responseHandler(!!sensor, res, sensor);

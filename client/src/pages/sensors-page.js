@@ -33,8 +33,7 @@ export default () => {
   useEffect(() => {
     async function getSensors() {
       try {
-        console.log(token);
-        const response = await request('/sensor', 'GET', null, {
+        const response = await request('/user', 'GET', null, {
           Authorization: `Bearer ${token}`,
         });
         
@@ -53,7 +52,7 @@ export default () => {
           { channel: 'tel', address: '+380972074557' },
         ],
       };
-      const response = await request('/sensor/add', 'POST', data, {
+      const response = await request('/user/add', 'POST', data, {
         Authorization: `Bearer ${token}`,
       });
     } catch (e) {
@@ -69,7 +68,7 @@ export default () => {
           { channel: 'tel', address: '+380972074557' },
         ],
       };
-      await request(`/sensor/${_id}`, 'PUT', data, {
+      await request(`/user/${_id}`, 'PUT', data, {
         Authorization: `Bearer ${token}`,
       });
     } catch (e) {
@@ -78,7 +77,7 @@ export default () => {
   };
   const deleteHandler = async (_id) => {
     try {
-      await request(`/sensor/${_id}`, 'DELETE', null, {
+      await request(`/user/${_id}`, 'DELETE', null, {
         Authorization: `Bearer ${token}`,
       });
     } catch (e) {
