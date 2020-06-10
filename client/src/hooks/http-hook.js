@@ -1,41 +1,39 @@
 import { useState, useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { setError, setLoading } from '../redux/actions';
+import getPath from './requests';
 
 export const useHttp = () => {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
+  const dispatch = useDispatch();
+  const token = useSelector(({ token }) => token);
 
-  const request = useCallback(
-    async (url, method = 'GET', body = null, headers = {}) => {
-      try {
-        if (body) {
-          body = JSON.stringify(body);
-          headers['Content-type'] = 'application/json';
-          headers['Origin'] = 'http://localhost:3000';
-        }
-        console.log('before request', body);
-        setLoading(true);
-        const response = await fetch('http://localhost:5000' + url, { method, body, headers });
-        console.log('after request', response);
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(data.message || 'Server error');
-        }
-
-        setLoading(false);
-        return data;
-      } catch (error) {
-        console.log(error);
-        setLoading(false);
-        setError(error);
-        throw error;
-      }
-    },
-    [],
-  );
-  const clearErrors = useCallback(() => {
-    setError(null);
+  const request = useCallback(async (requestName, body = null, id = null) => {
+    const headers = {};
+    let { method, url } = getPath(requestName);
+    if (id) {
+      url += id;
+    }
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+    if (body) {
+      body = JSON.stringify(body);
+      headers['Content-type'] = 'application/json';
+      //headers['Origin'] = 'http://localhost:3000';
+    }
+    dispatch(setLoading(true));
+    try {
+      // console.log('before request', body);
+      const response = await fetch(url, { method, body, headers });
+      console.log('after request', response);
+      const data = await response.json();
+      dispatch(setLoading(false));
+      return data;
+    } catch (error) {
+      console.log(error);
+      dispatch(setLoading(false));
+      dispatch(setError(error));
+    }
   }, []);
-
-  return { loading, error, request, clearErrors };
+  return { request };
 };

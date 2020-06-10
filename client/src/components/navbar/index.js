@@ -1,5 +1,6 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { NavLink, useHistory } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 import { useAuth } from '../../hooks/auth-hook';
 import styled from 'styled-components';
 
@@ -7,9 +8,17 @@ const Wrapper = styled.nav`
   /*height: 50px;*/
   display: flex;
   padding: 10px;
-  padding-right: 30px;
-  justify-content: flex-end;
+  padding: 10px 30px;
+  justify-content: space-between;
   background-color: #78909c;
+`;
+const Logo = styled.a`
+  display: block;
+  background-image: url('./images/logo.png');
+  background-size: cover;
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
 `;
 const Logout = styled.a`
   display: block;
@@ -29,6 +38,12 @@ const Logout = styled.a`
 `;
 
 export default () => {
+  const { language, token } = useSelector((state) => {
+    return {
+      language: state.language.navbar,
+      token: state.token,
+    };
+  });
   const { logout } = useAuth();
   const history = useHistory();
 
@@ -40,8 +55,9 @@ export default () => {
 
   return (
     <Wrapper>
+      <Logo />
       <Logout href="/" onClick={logoutHandler}>
-        Выйти
+        {!!token ? language.logout : language.login}
       </Logout>
     </Wrapper>
   );

@@ -5,27 +5,12 @@ import { useSelector } from 'react-redux';
 import { useHttp } from '../hooks/http-hook';
 import styled from 'styled-components';
 
-const AddButton = styled.div`
-  width: 100px;
-  padding: 10px;
-  background-color: #2196f3;
-  border: 2px solid #2196f3;
-  font-size: 1.2rem;
-  border-radius: 5px;
-  transition: 0.3s;
-  &:hover {
-    background-color: #eee;
-    color: #2196f3;
-    cursor: pointer;
-  }
-`;
-
 export default () => {
   const [sensors, setSensors] = useState([]);
   const { request, loading } = useHttp();
   const { token, userName } = useSelector((state) => {
     return {
-      token: state.token, 
+      token: state.token,
       userName: state.userName,
     };
   });
@@ -33,11 +18,12 @@ export default () => {
   useEffect(() => {
     async function getSensors() {
       try {
-        const response = await request('/user', 'GET', null, {
+        console.log(token);
+        /*const response = await request('/sensor', 'GET', null, {
           Authorization: `Bearer ${token}`,
-        });
-        
-        setSensors(response);
+        });*/
+
+        //setSensors(response);
       } catch (err) {}
     }
     getSensors();
@@ -55,7 +41,6 @@ export default () => {
       const response = await request('/user/add', 'POST', data, {
         Authorization: `Bearer ${token}`,
       });
-      console.log(response);
     } catch (e) {
       console.log(e.message);
     }
@@ -69,7 +54,7 @@ export default () => {
           { channel: 'tel', address: '+380972074557' },
         ],
       };
-      await request(`/user/${_id}`, 'PUT', data, {
+      await request(`/sensor/${_id}`, 'PUT', data, {
         Authorization: `Bearer ${token}`,
       });
     } catch (e) {
@@ -78,7 +63,7 @@ export default () => {
   };
   const deleteHandler = async (_id) => {
     try {
-      await request(`/user/${_id}`, 'DELETE', null, {
+      await request(`/sensor/${_id}`, 'DELETE', null, {
         Authorization: `Bearer ${token}`,
       });
     } catch (e) {
@@ -92,14 +77,13 @@ export default () => {
   return (
     <>
       <h2>{userName}</h2>
-      <AddButton onClick={addHandler}>Add</AddButton>
-      { !loading
-        && sensors
-        && <SensorsList
-        sensors={sensors}
-        updateHandler={updateHandler}
-        deleteHandler={deleteHandler}
-        />}
+      {/*!loading && sensors && (
+        <SensorsList
+          sensors={sensors}
+          updateHandler={updateHandler}
+          deleteHandler={deleteHandler}
+        />
+      )*/}
     </>
   );
 };

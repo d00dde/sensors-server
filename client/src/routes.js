@@ -1,20 +1,26 @@
 import React from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 
+import MainPage from './pages/main-page';
+import UsersPage from './pages/users-page';
 import SensorsPage from './pages/sensors-page';
-// import CreatePage from './pages/create-page';
-import DetailPage from './pages/detail-page';
-import AuthPage from './pages/auth-page';
+import EventsPage from './pages/events-page';
 
 export const useRoutes = (isAuthenticated) => {
   if (isAuthenticated) {
     return (
       <Switch>
-        <Route path="/sensors" exact>
+        <Route path="/" exact>
+          <MainPage />
+        </Route>
+        <Route path="/sensors">
           <SensorsPage />
         </Route>
-        <Route path="/detail/:id">
-          <DetailPage />
+        <Route path="/users">
+          <UsersPage />
+        </Route>
+        <Route path="/events/:id">
+          <EventsPage />
         </Route>
         <Redirect to="/sensors" />
       </Switch>
@@ -23,7 +29,7 @@ export const useRoutes = (isAuthenticated) => {
   return (
     <Switch>
       <Route path="/" exact>
-        <AuthPage />
+        <MainPage />
       </Route>
       <Redirect to="/" />
     </Switch>

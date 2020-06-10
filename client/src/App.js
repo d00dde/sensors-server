@@ -2,50 +2,42 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import Navbar from './components/navbar';
 import Loader from './components/loader';
+import Modal from './components/modals';
 import { useRoutes } from './routes';
+import { useSelector, useDispatch } from 'react-redux';
+import { setLanguage } from './redux/actions';
 import { useAuth } from './hooks/auth-hook';
-<<<<<<< HEAD
-import { AuthContext } from './context/auth-context';
-=======
->>>>>>> dfcb5e39007eeeee11de9464fd2861a70b4a76f3
-import './index.css';
-
+import './App.css';
 
 function App() {
-<<<<<<< HEAD
-  const { login, logout, token, userName, ready } = useAuth();
-=======
-  const token = useSelector((state) => {
-    return state.token;
-  });
+  const token = useSelector(({ token }) => token);
+  const [ready, setReady] = useState(false);
+  const dispatch = useDispatch();
+  const [showModal, setShowModal] = useState('register');
   const { login, storageName } = useAuth();
->>>>>>> dfcb5e39007eeeee11de9464fd2861a70b4a76f3
   const isAuthenticated = !!token;
   const routes = useRoutes(isAuthenticated);
 
-  const [ready, setReady] = useState(false);
   useEffect(() => {
     const data = JSON.parse(localStorage.getItem(storageName));
     if (data && data.token) {
-      login(data.token, data.userName);
+      login(data.name, data.role, data.token);
     }
+    dispatch(setLanguage('default'));
     setReady(true);
   }, [login]);
-  
+
   if (!ready) {
     return <Loader />;
   }
   return (
-    <AuthContext.Provider
-      value={{ login, logout, token, userName, isAuthenticated }}
-    >
+    <div className="wrapper">
       <Router>
-        <div>
-          {isAuthenticated && <Navbar />}
-          {routes}
-        </div>
+        <Navbar />
+        <div>{routes}</div>
       </Router>
-    </AuthContext.Provider>
+      <Modal showModal={showModal} />
+    </div>
   );
 }
 

@@ -28,7 +28,7 @@ const validate = (req, res) => {
 
 router.post(
   '/register',
-  validators,
+  [validators],
   catchErrors(async (req, res) => {
     if (!validate(req, res)) return;
     const { email, name, password } = req.body;
@@ -39,7 +39,8 @@ router.post(
         .json({ message: 'Такой пользователь уже существует.' });
     }
     const hashedPassword = await bcrypt.hash(password, 10);
-    await db.createUser(email, name, hashedPassword);
+    const role = 'user';
+    await db.createUser(email, name, hashedPassword, role);
     res.status(201).json({ message: 'Пользователь создан.' });
   }),
 );
@@ -48,7 +49,7 @@ router.post(
 router.post(
   //TODO: возможен множественный вход одного и того же пользователя.
   '/login',
-  validators,
+  [validators],
   catchErrors(async (req, res) => {
     if (!validate(req, res)) return;
     const { email, password } = req.body;
@@ -67,6 +68,7 @@ router.post(
     res.json({
       token,
       userName: user.name,
+      role: user.role,
       message: 'Успешный вход в систему',
     });
   }),

@@ -1,65 +1,84 @@
 const { Router } = require('express');
-const userAuth = require('../middlewares/user.middleware');
+const { userAuth } = require('../middlewares/auth.middleware');
 const db = require('../database');
-const catchErrors = require('../utils').catchErrors;
-
+const { responseHandler, errorHandler } = require('../utils');
 const router = Router();
 
-const responseHandler = (isExist, res, data = null) => {
-  if (isExist) {
-    if (data) res.status(200).json(data);
-    else res.status(204).json({});
-  } else {
-    res.status(404).json({ message: 'Такого датчика не существует.' });
+const isOwner = (req, sensor) => {
+  if (req.user.userID === sensor.owner) {
+    return true;
   }
+  return false;
 };
 
-router.post(
-  '/add',
-  userAuth,
-  catchErrors(async (req, res) => {
+router.post('/add', [userAuth], async (req, res) => {
+  try {
     const sensor = await db.addSensor(
       req.body.description,
       req.body.channels,
       req.user.userID,
+      'none',
+      'none',
     );
-    res.status(201).json({ sensor });
-  }),
-);
-router.put(
-  '/:id',
-  userAuth,
-  catchErrors(async (req, res) => {
+    const { _id, description, channels, owner } = sensor;
+    res.status(201).json({ _id, description, channels, owner });
+  } catch (err) {
+    errorHandler(err, res);
+  }
+});
+
+router.put('/:id', [userAuth], async (req, res) => {
+  try {
+    const sensor = await db.getSensor(req.params.id);
+    if (!isOwner(req, sensor)) {
+      return responseHandler(false);
+    }
     const isUpdated = await db.updateSensor(
       req.params.id,
       req.body.description,
       req.body.channels,
     );
     responseHandler(isUpdated, res);
-  }),
-);
-router.delete(
-  '/:id',
-  userAuth,
-  catchErrors(async (req, res) => {
+  } catch (err) {
+    errorHandler(err, res);
+  }
+});
+
+router.delete('/:id', [userAuth], async (req, res) => {
+  try {
+    const sensor = await db.getSensor(req.params.id);
+    if (!isOwner(req, sensor)) {
+      return responseHandler(false);
+    }
     const isDeleted = await db.deleteSensor(req.params.id);
     responseHandler(isDeleted, res);
-  }),
-);
-router.get(
-  '/',
-  userAuth,
-  catchErrors(async (req, res) => {
-    const sensors = await db.getAllSensors(req.user.userID);
+  } catch (err) {
+    errorHandler(err, res);
+  }
+});
+
+router.get('/', [userAuth], async (req, res) => {
+  try {
+    let sensors = await db.getAllSensors(req.user.userID);
+    sensors = sensors.map(({ _id, description, channels, owner }) => {
+      return { _id, description, channels, owner };
+    });
     responseHandler(true, res, sensors);
-  }),
-);
-router.get(
-  '/:id',
-  userAuth,
-  catchErrors(async (req, res) => {
+  } catch (err) {
+    errorHandler(err, res);
+  }
+});
+
+router.get('/:id', [userAuth], async (req, res) => {
+  try {
     const sensor = await db.getSensor(req.params.id);
-    responseHandler(!!sensor, res, sensor);
-  }),
-);
+    if (isOwner(req, sensor)) {
+      return responseHandler(!!sensor, res, sensor);
+    }
+    return responseHandler(false);
+  } catch (err) {
+    errorHandler(err, res);
+  }
+});
+
 module.exports = router;

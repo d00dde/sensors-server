@@ -25,12 +25,12 @@ module.exports = {
   findUser: async (email) => {
     return await User.findOne({ email });
   },
-  createUser: async (email, name, hashedPassword) => {
-    const user = new User({ 
+  createUser: async (email, name, hashedPassword, role) => {
+    const user = new User({
       email,
       name,
-      role: 'user',
-      password: hashedPassword 
+      role,
+      password: hashedPassword,
     });
     await user.save();
   },
@@ -40,11 +40,13 @@ module.exports = {
   getAllSensors: async (userID) => {
     return await Sensor.find({ owner: userID });
   },
-  addSensor: async (description, channels, userID) => {
+  addSensor: async (description, channels, userID, systemID, secret) => {
     const sensor = new Sensor({
       description,
       channels,
       owner: userID,
+      systemID,
+      secret,
     });
     await sensor.save();
     return sensor;
@@ -64,18 +66,14 @@ module.exports = {
   },
   isAdmin: async (userID) => {
     const user = await User.findById(userID);
-    if(!user)
-      return false;
-    if(user.role === 'admin' || user.role === 'master')
-      return true;
+    if (!user) return false;
+    if (user.role === 'admin' || user.role === 'master') return true;
     return false;
   },
   isMaster: async (userID) => {
     const user = await User.findById(userID);
-    if(!user)
-      return false;
-    if(user.role === 'master')
-      return true;
+    if (!user) return false;
+    if (user.role === 'master') return true;
     return false;
   },
 };
