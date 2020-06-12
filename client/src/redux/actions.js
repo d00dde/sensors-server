@@ -1,7 +1,7 @@
 import types from './actionTypes';
 import rus from '../language/rus';
 import eng from '../language/eng';
-// import server from '../server';
+
 
 export const setAuth = (name, role, token) => {
   return {
@@ -28,19 +28,21 @@ export const setModal = (modalName) => {
   };
 };
 
-export const fetchUsersData = () => async (dispatch) => {
-  try {
-    // const usersData = await server.getData();
-    dispatch({
-      type: types.SET_USERS_DATA,
-      payload: 'usersData',
-    });
-  } catch (e) {
-    dispatch({
+export const fetch = (request, fieldName, requestName, body = null, id = null) => async (dispatch) => {
+  const responce = await request(requestName, body, id);
+  if(!responce.ok){
+      dispatch({
       type: types.SET_ERROR,
-      payload: e,
+      payload: responce.data.message,
     });
   }
+  dispatch({
+    type: types.SET_DATA,
+    payload: {
+      fieldName,
+      data: responce.data,
+    },
+  });
 };
 export const setLanguage = (langName) => {
   let language = {};

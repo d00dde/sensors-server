@@ -3,12 +3,17 @@ export default (requestName) => {
     case 'registerUser':
       return {
         method: 'POST',
-        path: '/auth/register',
+        url: '/auth/register',
       };
     case 'loginUser':
       return {
         method: 'POST',
-        path: '/auth/login',
+        url: '/auth/login',
+      };
+    case 'getSensors':
+      return {
+        method: 'GET',
+        url: '/user/',
       };
   }
 };

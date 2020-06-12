@@ -7,9 +7,10 @@ const initState = () => {
     name: '',
     role: '',
     token: '',
+    users: null,
+    sensors: null,
     loading: false,
     error: null,
-    errorMsg: '',
   };
 };
 
@@ -17,6 +18,11 @@ export const reducer = (state = initState(), action) => {
   //console.log('action: ', action.type);
   //console.log('data: ', action.payload);
   switch (action.type) {
+    case types.SET_DATA:
+      return {
+        ...state,
+        [action.payload.fieldName]: action.payload.data,
+      };
     case types.SET_LANGUAGE:
       return {
         ...state,
@@ -42,8 +48,7 @@ export const reducer = (state = initState(), action) => {
     case types.SET_ERROR:
       return {
         ...state,
-        error: true,
-        errorMsg: action.payload,
+        error: action.payload,
       };
     default:
       return state;

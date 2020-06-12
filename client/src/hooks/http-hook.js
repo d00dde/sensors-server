@@ -19,16 +19,18 @@ export const useHttp = () => {
     if (body) {
       body = JSON.stringify(body);
       headers['Content-type'] = 'application/json';
-      //headers['Origin'] = 'http://localhost:3000';
+      headers['Origin'] = 'http://localhost:3000';
     }
     dispatch(setLoading(true));
+    dispatch(setError(''));
     try {
-      // console.log('before request', body);
-      const response = await fetch(url, { method, body, headers });
-      console.log('after request', response);
+      //console.log('before request', url);
+      const response = await fetch('http://localhost:5000' + url, { method, body, headers });
+      //console.log('after request', response);
+      //console.log('status', response.ok);
       const data = await response.json();
       dispatch(setLoading(false));
-      return data;
+      return { ok: response.ok, data };
     } catch (error) {
       console.log(error);
       dispatch(setLoading(false));

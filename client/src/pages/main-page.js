@@ -1,6 +1,11 @@
 import React from 'react';
-import styled from 'styled-components';
+import './pages.scss';
 
 export default () => {
-  return <h1>Main Page</h1>;
+  return (
+  	<div className='main-page'>
+  		
+  	</div>
+  );
+
 };

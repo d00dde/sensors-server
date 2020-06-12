@@ -1,89 +1,37 @@
 import React, { useState, useContext, useEffect } from 'react';
-import Loader from '../components/loader';
+import Page from './page-wrapper';
 import SensorsList from '../components/sensors-list';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useHttp } from '../hooks/http-hook';
-import styled from 'styled-components';
+import { fetch, setModal } from '../redux/actions';
 
 export default () => {
-  const [sensors, setSensors] = useState([]);
-  const { request, loading } = useHttp();
-  const { token, userName } = useSelector((state) => {
+  const { request } = useHttp();
+  const dispatch = useDispatch();
+  const { userName, language, sensors } = useSelector((state) => {
     return {
-      token: state.token,
-      userName: state.userName,
+      userName: state.name,
+      language: state.language.sensorsList,
+      sensors: state.sensors,
     };
   });
 
   useEffect(() => {
-    async function getSensors() {
-      try {
-        console.log(token);
-        /*const response = await request('/sensor', 'GET', null, {
-          Authorization: `Bearer ${token}`,
-        });*/
+    dispatch(fetch(request, 'sensors','getSensors', null));
+  }, [request]);
 
-        //setSensors(response);
-      } catch (err) {}
-    }
-    getSensors();
-  }, [token, request]);
-
-  const addHandler = async () => {
-    try {
-      const data = {
-        description: '42',
-        channels: [
-          { channel: 'telegram', address: '@D00dde1' },
-          { channel: 'tel', address: '+380972074557' },
-        ],
-      };
-      const response = await request('/user/add', 'POST', data, {
-        Authorization: `Bearer ${token}`,
-      });
-    } catch (e) {
-      console.log(e.message);
-    }
-  };
-  const updateHandler = async (_id) => {
-    try {
-      const data = {
-        description: '42',
-        channels: [
-          { channel: 'email', address: '@D00dde2' },
-          { channel: 'tel', address: '+380972074557' },
-        ],
-      };
-      await request(`/sensor/${_id}`, 'PUT', data, {
-        Authorization: `Bearer ${token}`,
-      });
-    } catch (e) {
-      console.log(e.message);
-    }
-  };
-  const deleteHandler = async (_id) => {
-    try {
-      await request(`/sensor/${_id}`, 'DELETE', null, {
-        Authorization: `Bearer ${token}`,
-      });
-    } catch (e) {
-      console.log(e.message);
-    }
-  };
-
-  if (loading) {
-    return <Loader />;
+  const addHandler = () => {
+    dispatch(setModal('addSensor'));
   }
+  const sensorsList = sensors && sensors.length ? <SensorsList /> : language.noSensors;
+
   return (
-    <>
-      <h2>{userName}</h2>
-      {/*!loading && sensors && (
-        <SensorsList
-          sensors={sensors}
-          updateHandler={updateHandler}
-          deleteHandler={deleteHandler}
-        />
-      )*/}
-    </>
+    <Page className='sensors-page'>
+      <div className='toolbar'>  
+        <div className='name'>{userName}</div>
+        <div className='add-btn' onClick={addHandler}>{language.addBtn}</div>
+      </div>
+      {sensorsList}
+    </Page>
   );
 };
