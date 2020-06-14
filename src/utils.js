@@ -1,9 +1,9 @@
 module.exports = {
   catchErrors: (fn) => {
-    return (req, res) => {
+    return async (req, res) => {
       try {
         // throw new Error('error add sensor');
-        const resp = fn(req, res);
+        await fn(req, res);
       } catch (err) {
         console.log(err.message);
         res.status(500).json({ message: 'Ошибка сервера.' });

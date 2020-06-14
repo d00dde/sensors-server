@@ -1,8 +1,10 @@
 const { Router } = require('express');
 const { userAuth } = require('../middlewares/auth.middleware');
 const db = require('../database');
-const { responseHandler, errorHandler } = require('../utils');
+const { responseHandler, catchErrors } = require('../utils');
 const router = Router();
+
+router.use(userAuth);
 
 const isOwner = (req, sensor) => {
   if (req.user.userID === sensor.owner) {
@@ -11,8 +13,9 @@ const isOwner = (req, sensor) => {
   return false;
 };
 
-router.post('/add', [userAuth], async (req, res) => {
-  try {
+router.post(
+  '/add',
+  catchErrors(async (req, res) => {
     const sensor = await db.addSensor(
       req.body.description,
       req.body.channels,
@@ -22,13 +25,12 @@ router.post('/add', [userAuth], async (req, res) => {
     );
     const { _id, description, channels, owner } = sensor;
     res.status(201).json({ _id, description, channels, owner });
-  } catch (err) {
-    errorHandler(err, res);
-  }
-});
+  }),
+);
 
-router.put('/:id', [userAuth], async (req, res) => {
-  try {
+router.put(
+  '/:id',
+  catchErrors(async (req, res) => {
     const sensor = await db.getSensor(req.params.id);
     if (!isOwner(req, sensor)) {
       return responseHandler(false);
@@ -39,46 +41,41 @@ router.put('/:id', [userAuth], async (req, res) => {
       req.body.channels,
     );
     responseHandler(isUpdated, res);
-  } catch (err) {
-    errorHandler(err, res);
-  }
-});
+  }),
+);
 
-router.delete('/:id', [userAuth], async (req, res) => {
-  try {
+router.delete(
+  '/:id',
+  catchErrors(async (req, res) => {
     const sensor = await db.getSensor(req.params.id);
     if (!isOwner(req, sensor)) {
       return responseHandler(false);
     }
     const isDeleted = await db.deleteSensor(req.params.id);
     responseHandler(isDeleted, res);
-  } catch (err) {
-    errorHandler(err, res);
-  }
-});
+  }),
+);
 
-router.get('/', [userAuth], async (req, res) => {
-  try {
+router.get(
+  '/',
+  catchErrors(async (req, res) => {
     let sensors = await db.getAllSensors(req.user.userID);
     sensors = sensors.map(({ _id, description, channels, owner }) => {
       return { _id, description, channels, owner };
     });
     responseHandler(true, res, sensors);
-  } catch (err) {
-    errorHandler(err, res);
-  }
-});
+  }),
+);
 
-router.get('/:id', [userAuth], async (req, res) => {
-  try {
+router.get(
+  '/:id',
+  catchErrors(async (req, res) => {
     const sensor = await db.getSensor(req.params.id);
     if (isOwner(req, sensor)) {
       return responseHandler(!!sensor, res, sensor);
     }
     return responseHandler(false);
-  } catch (err) {
-    errorHandler(err, res);
-  }
-});
+  }),
+);
 
 module.exports = router;

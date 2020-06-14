@@ -7,7 +7,7 @@ const users = [
     name: 'John',
     role: 'master',
     password: '$2a$10$DhQAmnU6E4RcwgB/LkN3f.yBdaFZCsOEcl.SIjZnxiDhP5dHib/zK',
-    sensors: [], 
+    sensors: [],
   },
 ];
 let sensors = [
@@ -34,8 +34,8 @@ module.exports = {
   createUser: (email, name, hashedPassword) => {
     const user = {
       id: ++max_user_id,
-      email, 
-      name, 
+      email,
+      name,
       role: 'user',
       password: hashedPassword,
       sensors: [],
@@ -76,25 +76,20 @@ module.exports = {
     const filtred = sensors.filter((sensor) => {
       return sensor._id != _id;
     });
-    if(filtred.length === sensors.length)
-      return false;
+    if (filtred.length === sensors.length) return false;
     sensors = filtred;
     return true;
   },
   isAdmin: async (userID) => {
     const user = users.find((user) => userID === user.id);
-    if(!user)
-      return false;
-    if(user.role === 'admin' || user.role === 'master')
-      return true;
+    if (!user) return false;
+    if (user.role === 'admin' || user.role === 'master') return true;
     return false;
   },
   isMaster: async (userID) => {
     const user = users.find((user) => userID === user.id);
-    if(!user)
-      return false;
-    if(user.role === 'master')
-      return true;
+    if (!user) return false;
+    if (user.role === 'master') return true;
     return false;
   },
 };

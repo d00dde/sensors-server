@@ -28,7 +28,7 @@ const validate = (req, res) => {
 
 router.post(
   '/register',
-  [validators],
+  validators,
   catchErrors(async (req, res) => {
     if (!validate(req, res)) return;
     const { email, name, password } = req.body;
@@ -49,7 +49,7 @@ router.post(
 router.post(
   //TODO: возможен множественный вход одного и того же пользователя.
   '/login',
-  [validators],
+  validators,
   catchErrors(async (req, res) => {
     if (!validate(req, res)) return;
     const { email, password } = req.body;
