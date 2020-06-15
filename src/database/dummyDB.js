@@ -29,6 +29,7 @@ module.exports = {
     const user = users.find((user) => {
       return user.email === email;
     });
+    // throw new Error('ups');
     return Promise.resolve(user);
   },
   createUser: (email, name, hashedPassword) => {

@@ -4,14 +4,15 @@ import Modal from './modal';
 import Input from './Input';
 import { useHttp } from '../../hooks/http-hook';
 import { useAuth } from '../../hooks/auth-hook';
+import validators from './validators';
 
 export default ({ lang, closeModal }) => {
   const { request } = useHttp();
   const { login } = useAuth();
   const [form, setForm] = useState({
     email: '',
-    name: '', 
-    password: '', 
+    name: '',
+    password: '',
     confirmPassword: '',
   });
   const [msg, setMsg] = useState('');
@@ -21,71 +22,64 @@ export default ({ lang, closeModal }) => {
   };
 
   const registerHandler = async () => {
-    if(!validateForm(form, setMsg, lang.messages)){
+    if (!validateForm(form, setMsg, lang.messages)) {
       return;
     }
-    if (await registerAndLogin (request, login, setMsg, lang, form)){
+    if (await registerAndLogin(request, login, form)) {
       history.push('/sensors');
       closeModal();
     }
   };
 
   return (
-    <Modal 
-      closeModal={closeModal} 
-      msg={msg}
-      submit={registerHandler}
-    >
-      <div className='title'>{lang.title}</div>
-      <Input 
-        label={lang.email} 
-        ph={lang.emailPh} 
-        name='email' 
+    <Modal closeModal={closeModal} msg={msg} submit={registerHandler}>
+      <div className="title">{lang.title}</div>
+      <Input
+        label={lang.email}
+        ph={lang.emailPh}
+        name="email"
         onChange={inputsHandler}
       />
-      <Input 
-        label={lang.name} 
-        ph={lang.namePh} 
-        name='name' 
+      <Input
+        label={lang.name}
+        ph={lang.namePh}
+        name="name"
         onChange={inputsHandler}
       />
-      <Input 
-        label={lang.password} 
-        type='password' 
-        ph={lang.passwordPh} 
-        name='password' 
+      <Input
+        label={lang.password}
+        type="password"
+        ph={lang.passwordPh}
+        name="password"
         onChange={inputsHandler}
       />
-      <Input 
-        label={lang.confirmPassword} 
-        type='password' 
-        ph={lang.confirmPasswordPh} 
-        name='confirmPassword' 
+      <Input
+        label={lang.confirmPassword}
+        type="password"
+        ph={lang.confirmPasswordPh}
+        name="confirmPassword"
         onChange={inputsHandler}
       />
-      <div 
-        className='btn' 
-        onClick={registerHandler}
-      >
+      <div className="btn" onClick={registerHandler}>
         {lang.regButton}
       </div>
     </Modal>
   );
 };
 function validateForm(form, setMsg, messages) {
-  if(!validateEmail(form.email)){
+  if (!validators.validateEmail(form.email)) {
     setMsg(messages.emailNoValid);
     return false;
   }
-  if(!validateName(form.name)){
+  if (!validators.validateName(form.name)) {
     setMsg(messages.nameNoValid);
     return false;
   }
-  if(!validatePassword(form.password)){
+  if (!validators.validatePassword(form.password)) {
     setMsg(messages.passwordNoValid);
     return false;
   }
-  if(!passwordsIsEqual(form.password, form.confirmPassword)){
+  if (!validators.passwordsIsEqual(form.password, form.confirmPassword)) {
     setMsg(messages.passwordsNoEqual);
     return false;
   }
@@ -93,46 +87,22 @@ function validateForm(form, setMsg, messages) {
   return true;
 }
 
-function validateEmail(email) {
-  return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email);
-}
-function validateName(name) {
-  return name.trim().length;
-}
-function validatePassword(password) {
-  return password.trim().length > 5;
-
-}
-function passwordsIsEqual(password, confirmPassword) {
-  return password.trim() === confirmPassword.trim();
-}
-
-async function registerAndLogin (request, login, setMsg, lang, form) {
+async function registerAndLogin(request, login, form) {
   let resp = await request('registerUser', {
-    email:form.email,
+    email: form.email,
     name: form.name,
-    password:form.password,
+    password: form.password,
   });
-  if(!resp){
-    setMsg(lang.messages.serverError);
-    return false;
-  }
-  if(!resp.ok) {
-    setMsg(resp.data.message);
+  if (!resp) {
     return false;
   }
   resp = await request('loginUser', {
-    email:form.email,
-    password:form.password,
+    email: form.email,
+    password: form.password,
   });
-  if(!resp){
-    setMsg(lang.messages.serverError);
+  if (!resp) {
     return false;
   }
-  if(!resp.ok){
-    setMsg(resp.data.message);
-    return false;
-  }
-  login(resp.data.userName, resp.data.role, resp.data.token);
+  login(resp.userName, resp.role, resp.token);
   return true;
 }

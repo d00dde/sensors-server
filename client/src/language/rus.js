@@ -22,8 +22,7 @@ export default {
       nameNoValid: 'Введите имя',
       passwordNoValid: 'Пароль слишком короткий',
       passwordsNoEqual: 'Пароли не совпадают',
-      serverError: 'Ошибка сервера',
-    }
+    },
   },
   login: {
     title: 'Вход',
@@ -35,14 +34,16 @@ export default {
     messages: {
       emailNoValid: 'Введите корректный адрес email',
       passwordNoValid: 'Пароль слишком короткий',
-      serverError: 'Ошибка сервера',
-    }
+    },
   },
   sensorsList: {
     addBtn: 'Добавить',
     noSensors: 'Сенсоров пока нет.',
+    updateBtn: 'Изменить',
+    deleteBtn: 'Удалить',
   },
   addSensor: {
-
+    title: 'Добавить датчик',
+    addButton: 'Добавить',
   },
 };

@@ -10,7 +10,7 @@ const initState = () => {
     users: null,
     sensors: null,
     loading: false,
-    error: null,
+    error: '',
   };
 };
 

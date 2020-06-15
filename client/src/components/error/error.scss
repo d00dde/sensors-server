@@ -1,0 +1,9 @@
+@import '../../scss/variables';
+.error {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: $dangerColor;
+  height: 70vh;
+  font-size: 2rem;
+}

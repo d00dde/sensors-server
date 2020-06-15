@@ -2,7 +2,6 @@ import types from './actionTypes';
 import rus from '../language/rus';
 import eng from '../language/eng';
 
-
 export const setAuth = (name, role, token) => {
   return {
     type: types.SET_AUTH,
@@ -28,19 +27,19 @@ export const setModal = (modalName) => {
   };
 };
 
-export const fetch = (request, fieldName, requestName, body = null, id = null) => async (dispatch) => {
-  const responce = await request(requestName, body, id);
-  if(!responce.ok){
-      dispatch({
-      type: types.SET_ERROR,
-      payload: responce.data.message,
-    });
-  }
+export const fetch = (
+  request,
+  fieldName,
+  requestName,
+  body = null,
+  id = null,
+) => async (dispatch) => {
+  const response = await request(requestName, body, id);
   dispatch({
     type: types.SET_DATA,
     payload: {
       fieldName,
-      data: responce.data,
+      data: response,
     },
   });
 };
