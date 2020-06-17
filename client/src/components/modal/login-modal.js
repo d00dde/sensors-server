@@ -37,6 +37,7 @@ export default ({ lang, closeModal }) => {
         ph={lang.emailPh}
         name="email"
         onChange={inputsHandler}
+        defVal='d48564@gmail.com'
       />
       <Input
         label={lang.password}
@@ -44,6 +45,7 @@ export default ({ lang, closeModal }) => {
         ph={lang.passwordPh}
         name="password"
         onChange={inputsHandler}
+        defVal='123456'
       />
       <div className="btn" onClick={loginHandler}>
         {lang.loginButton}

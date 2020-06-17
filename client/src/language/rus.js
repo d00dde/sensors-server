@@ -44,6 +44,18 @@ export default {
   },
   addSensor: {
     title: 'Добавить датчик',
+    description: 'Название',
+    descriptionPh: 'Введите название датчика',
+    channels: {
+      telegram: {
+        title: 'Telegram',
+        placeholder: 'Введите адресс telegram',
+      },
+      viber: {
+        title: 'Viber',
+        placeholder: 'Введите адресс viber',
+      },
+    },
     addButton: 'Добавить',
   },
 };

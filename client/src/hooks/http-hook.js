@@ -42,7 +42,7 @@ export const useHttp = () => {
     } catch (error) {
       console.log(error);
       dispatch(setLoading(false));
-      dispatch(setError(error));
+      dispatch(setError(error.message));
     }
   }, []);
   return { request };

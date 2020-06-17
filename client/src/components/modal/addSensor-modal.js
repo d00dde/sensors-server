@@ -1,22 +1,32 @@
 import React, { useState } from 'react';
-//import { useHistory } from 'react-router-dom';
 import Modal from './modal';
 import Input from './Input';
+import CheckInput from './Check-input';
 //import { useHttp } from '../../hooks/http-hook';
-//import { useAuth } from '../../hooks/auth-hook';
 //import validators from './validators';
+
+const availableChannels = ['telegram', 'viber'];
 
 export default ({ lang, closeModal }) => {
   /*const { request } = useHttp();
   const { login } = useAuth();*/
-  const [form, setForm] = useState({
-    description: '',
-    telegram: '',
+  const [description, setDescription] = useState('');
+  const [channels, setChannels] = useState(() => {
+    const channels = {};
+    availableChannels.forEach((channel) => {
+      channels[channel] = {enabled: false, value: ''};
+    });
+    return channels;
   });
   const [msg, setMsg] = useState('');
-  /*const history = useHistory();*/
-  const inputsHandler = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+  const changeHandler = (type, channel, value) => {
+    setChannels({
+      ...channels,
+      [channel]: {
+        ...channels[channel],
+        [type]: value
+      }
+    });
   };
 
   const addHandler = async () => {
@@ -24,10 +34,23 @@ export default ({ lang, closeModal }) => {
       return;
     }
     if (await loginReq(request, login, form)) {
-      history.push('/sensors');
       closeModal();
-	}*/
+    }*/
   };
+  console.log(channels);
+  const channelsInputs = availableChannels.map((channel) => {
+    return (
+      <CheckInput
+        key={channel}
+        label={lang.channels[channel].title}
+        ph={lang.channels[channel].placeholder}
+        channel={channel}
+        enabled={channels[channel].enabled}
+        value={channels[channel].value}
+        changeHandler={changeHandler}
+      />
+    );
+  })
 
   return (
     <Modal closeModal={closeModal} msg={msg} submit={addHandler}>
@@ -36,14 +59,9 @@ export default ({ lang, closeModal }) => {
         label={lang.description}
         ph={lang.descriptionPh}
         name="description"
-        onChange={inputsHandler}
+        onChange={(e) => setDescription(e.target.value.trim())}
       />
-      <Input
-        label={lang.telegram}
-        ph={lang.telegramPh}
-        name="telegram"
-        onChange={inputsHandler}
-      />
+      {channelsInputs}
       <div className="btn" onClick={addHandler}>
         {lang.addButton}
       </div>

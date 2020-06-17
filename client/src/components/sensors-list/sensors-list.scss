@@ -13,10 +13,14 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border: 1px solid $altBtnColor;
-    box-shadow: 1px 1px 1px 1px $altBtnColor;
+    border: 2px solid $altBtnColor;
     padding: 5px 15px;
     border-radius: 10px;
+    background-color: $hoverColor;
+    transition: background-color .3s;
+    &:hover {
+      background-color: $pageBGColor;
+    }
   }
   span {
     flex-grow: 1;
