@@ -3,7 +3,7 @@ const config = require('config');
 const db = require('../database');
 
 const middleware = (checkPremissions) => {
-  return (req, res, next) => {
+  return async (req, res, next) => {
     if (req.method === 'OPTIONS') {
       return next();
     }
@@ -15,11 +15,12 @@ const middleware = (checkPremissions) => {
         return res.status(401).json({ message: 'Ошибка авторизации' });
       }
       const decoded = jwt.verify(token, config.get('jwtSecret'));
-      if (!checkPremissions(decoded)) {
-        return res.status(401).json({ message: 'Ошибка авторизации' });
+      const access = await checkPremissions(decoded);
+      if (access) {
+        req.user = decoded;
+        return next();
       }
-      req.user = decoded;
-      next();
+      return res.status(401).json({ message: 'Ошибка авторизации' });
     } catch (err) {
       res.status(401).json({ message: 'Ошибка авторизации' });
     }
@@ -27,17 +28,17 @@ const middleware = (checkPremissions) => {
 };
 
 module.exports = {
-  userAuth: middleware((decoded) => {
+  userAuth: middleware(async (decoded) => {
     return true;
   }),
-  adminAuth: middleware((decoded) => {
-    if (db.isAdmin(decoded.userID)) {
+  adminAuth: middleware(async (decoded) => {
+    if (await db.isAdmin(decoded.userID)) {
       return true;
     }
     return false;
   }),
-  masterAuth: middleware((decoded) => {
-    if (db.isMaster(decoded.userID)) {
+  masterAuth: middleware(async (decoded) => {
+    if (await db.isMaster(decoded.userID)) {
       return true;
     }
     return false;

@@ -83,8 +83,24 @@
     margin-top: 30px;
     border-radius: 5px;
   }
+  .buttons {
+    min-width: 300px;
+    margin: 30px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    .btn-delete {
+      @include button($dangerColor, $modalBg);
+      min-width: 100px;
+    }
+    .btn-cancel {
+      @include button($altBtnColor, $modalBg);
+      min-width: 100px;
+    }
+  }
   .message {
     display: flex;
+    max-width: 300px;
     justify-content: center;
     align-items: center;
     padding: 0 55px;

@@ -10,8 +10,8 @@ export default ({ lang, closeModal }) => {
   const { request } = useHttp();
   const { login } = useAuth();
   const [form, setForm] = useState({
-    email: '',
-    password: '',
+    email: 'd48564@gmail.com',
+    password: '123456',
   });
   const [msg, setMsg] = useState('');
   const history = useHistory();
@@ -37,7 +37,7 @@ export default ({ lang, closeModal }) => {
         ph={lang.emailPh}
         name="email"
         onChange={inputsHandler}
-        defVal='d48564@gmail.com'
+        value={form.email}
       />
       <Input
         label={lang.password}
@@ -45,7 +45,7 @@ export default ({ lang, closeModal }) => {
         ph={lang.passwordPh}
         name="password"
         onChange={inputsHandler}
-        defVal='123456'
+        value={form.password}
       />
       <div className="btn" onClick={loginHandler}>
         {lang.loginButton}

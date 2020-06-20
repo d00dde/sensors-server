@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setModal } from '../../redux/actions';
+import { setModal, setSensorId } from '../../redux/actions';
 import './sensors-list.scss';
 
 export default () => {
@@ -11,23 +11,25 @@ export default () => {
       language: state.language.sensorsList,
     };
   });
-  const updateHandler = async (_id) => {
-    console.log('update');
+  const updateHandler = (id) => {
+    dispatch(setSensorId(id));
+    dispatch(setModal('updateSensor'));
   };
-  const deleteHandler = async (_id) => {
-    console.log('delete');
+  const deleteHandler = (id) => {
+    dispatch(setSensorId(id));
+    dispatch(setModal('deleteSensor'));
   };
 
   const sensorsList =
     sensors && sensors.length ? (
-      sensors.map(({ _id, description }) => {
+      sensors.map(({ _id, description, channels }) => {
         return (
           <div key={_id} className="sensor-item">
             <span>{description}</span>
-            <div className="update-btn" onClick={updateHandler}>
+            <div className="update-btn" onClick={() => updateHandler(_id)}>
               {language.updateBtn}
             </div>
-            <div className="delete-btn" onClick={deleteHandler}>
+            <div className="delete-btn" onClick={() => deleteHandler(_id)}>
               {language.deleteBtn}
             </div>
           </div>

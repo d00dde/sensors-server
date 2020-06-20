@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
-import { setAuth } from '../redux/actions';
+import { setAuth, clearData } from '../redux/actions';
 const storageName = 'userData';
 
 export const useAuth = () => {
@@ -15,11 +15,12 @@ export const useAuth = () => {
         token,
       }),
     );
-  }, []);
+  }, [dispatch]);
   const logout = useCallback(() => {
     dispatch(setAuth(null, null, null));
+    dispatch(clearData());
     localStorage.removeItem(storageName);
-  }, []);
+  }, [dispatch]);
 
   return { login, logout, storageName };
 };

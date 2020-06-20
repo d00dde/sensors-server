@@ -12,8 +12,12 @@ module.exports = {
   },
   responseHandler: (isExist, res, data = null) => {
     if (isExist) {
-      if (data) res.status(200).json(data);
-      else res.status(204).json({});
+      if (data){
+        res.status(200).json(data);
+      } 
+      else {
+        res.status(204).json({});
+      }
     } else {
       res.status(404).json({ message: 'Такого датчика не существует.' });
     }

@@ -16,12 +16,13 @@ export default (props) => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(setError(''));
-  }, []);
+  }, [dispatch]);
 
   const msg = loading ? <Loader size="50px" /> : error ? error : props.msg;
   const keyHandler = (e) => {
     if (e.key === 'Enter') props.submit();
   };
+  const message = props.noMessage ? null : <div className="message">{msg}</div>;
 
   return (
     <div
@@ -34,7 +35,7 @@ export default (props) => {
           &times;
         </div>
         {props.children}
-        <div className="message">{msg}</div>
+        {message}
       </div>
     </div>
   );

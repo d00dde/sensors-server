@@ -2,51 +2,51 @@ import React, { useState } from 'react';
 import Modal from './modal';
 import Input from './Input';
 import CheckInput from './Check-input';
-//import { useHttp } from '../../hooks/http-hook';
-//import validators from './validators';
+import { useHttp } from '../../hooks/http-hook';
+import { useDispatch } from 'react-redux';
+import { fetch } from '../../redux/actions';
+import validators from './validators';
+import constants from '../../constants';
 
-const availableChannels = ['telegram', 'viber'];
+const availableChannels = constants.availableChannels;
 
 export default ({ lang, closeModal }) => {
-  /*const { request } = useHttp();
-  const { login } = useAuth();*/
+  const { request } = useHttp();
+  const dispatch = useDispatch();
   const [description, setDescription] = useState('');
   const [channels, setChannels] = useState(() => {
-    const channels = {};
-    availableChannels.forEach((channel) => {
-      channels[channel] = {enabled: false, value: ''};
+    return availableChannels.map((channel) => {
+      return {channel, enabled: false, address: ''};
     });
-    return channels;
   });
   const [msg, setMsg] = useState('');
   const changeHandler = (type, channel, value) => {
-    setChannels({
-      ...channels,
-      [channel]: {
-        ...channels[channel],
-        [type]: value
-      }
-    });
+    setChannels(channels.map((item) => {
+      if(item.channel !== channel)
+        return item;
+      item[type] = value;
+      return item;
+    }));
   };
 
   const addHandler = async () => {
-    /*if (!validateForm(form, setMsg, lang.messages)) {
+    if (!validateForm(description, channels, setMsg, lang.messages)) {
       return;
     }
-    if (await loginReq(request, login, form)) {
+    if (await addReq(request, description, channels)) {
+      dispatch(fetch(request, 'sensors', 'getSensors', null));
       closeModal();
-    }*/
+    }
   };
-  console.log(channels);
-  const channelsInputs = availableChannels.map((channel) => {
+  const channelsInputs = channels.map((item) => {
     return (
       <CheckInput
-        key={channel}
-        label={lang.channels[channel].title}
-        ph={lang.channels[channel].placeholder}
-        channel={channel}
-        enabled={channels[channel].enabled}
-        value={channels[channel].value}
+        key={item.channel}
+        label={lang.channels[item.channel].title}
+        ph={lang.channels[item.channel].placeholder}
+        channel={item.channel}
+        enabled={item.enabled}
+        address={item.address}
         changeHandler={changeHandler}
       />
     );
@@ -60,6 +60,7 @@ export default ({ lang, closeModal }) => {
         ph={lang.descriptionPh}
         name="description"
         onChange={(e) => setDescription(e.target.value.trim())}
+        value={description}
       />
       {channelsInputs}
       <div className="btn" onClick={addHandler}>
@@ -68,27 +69,44 @@ export default ({ lang, closeModal }) => {
     </Modal>
   );
 };
-/*function validateForm(form, setMsg, messages) {
-  if (!validators.validateEmail(form.email)) {
-    setMsg(messages.emailNoValid);
+function validateForm(description, channels, setMsg, messages) {
+  if (!validators.validateDescription(description)) {
+    setMsg(messages.descriptionIsEmpty);
     return false;
   }
-  if (!validators.validatePassword(form.password)) {
-    setMsg(messages.passwordNoValid);
+  if(!validators.channelsIsNoEmpty(channels)) {
+    setMsg(messages.noChannels);
+    return false;   
+  }
+
+  if(!channels.every((channel) => {
+    return !(channel.enabled && !validators.channelValidAddress(channel)) 
+  })) {
+    setMsg(messages.noValidChannelAddress);
     return false;
   }
   setMsg('');
   return true;
 }
 
-async function loginReq(request, login, form) {
-  const resp = await request('loginUser', {
-    email: form.email,
-    password: form.password,
+async function addReq(request, description, channels) {
+  const resp = await request('addSensor', {
+    description,
+    channels: prepareChannels(channels),
   });
   if (!resp) {
     return false;
   }
-  login(resp.userName, resp.role, resp.token);
   return true;
-}*/
+}
+
+function prepareChannels(channels) {
+  return channels
+      .filter((item) => item.enabled)
+      .map((item) => {
+        return {
+          channel: item.channel,
+          address: item.address,
+        }
+      });
+}

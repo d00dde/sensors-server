@@ -1,5 +1,5 @@
-let max_user_id = 1;
-let max_sensor_id = 1;
+let max_user_id = 2;
+let max_sensor_id = 3;
 const users = [
   {
     id: 1,
@@ -7,17 +7,43 @@ const users = [
     name: 'John',
     role: 'master',
     password: '$2a$10$DhQAmnU6E4RcwgB/LkN3f.yBdaFZCsOEcl.SIjZnxiDhP5dHib/zK',
-    sensors: [],
+  },
+    {
+    id: 2,
+    email: 'd48564@gmail.con',
+    name: 'Bob',
+    role: 'user',
+    password: '$2a$10$DhQAmnU6E4RcwgB/LkN3f.yBdaFZCsOEcl.SIjZnxiDhP5dHib/zK',
   },
 ];
 let sensors = [
   {
     _id: 1,
-    description: 'TEST_SENSOR',
-    channels: [],
+    description: 'TELEG_SENSOR',
+    channels: [
+      {channel: 'telegram', address: '@D00dde1'}
+    ],
     systemID: 42,
     secret: '42',
     owner: 1,
+  },
+  {
+    _id: 2,
+    description: 'VIBER_SENSOR',
+    channels: [
+      {channel: 'viber', address: '+380972074557'}
+    ],
+    systemID: 42,
+    secret: '42',
+    owner: 1,
+  },
+  {
+    _id: 3,
+    description: 'LOL_SENSOR',
+    channels: [],
+    systemID: 42,
+    secret: '42',
+    owner: 2,
   },
 ];
 
@@ -45,7 +71,7 @@ module.exports = {
   },
   getSensor: async (id) => {
     const find = sensors.find((sensor) => {
-      return sensor._id === id;
+      return +sensor._id === +id;
     });
     return Promise.resolve(find);
   },
@@ -66,12 +92,13 @@ module.exports = {
     return sensor;
   },
   updateSensor: async (id, description, channels) => {
-    /*const sensor = await Sensor.findById(id);
+    const sensor = sensors.find((sensor) => {
+      return +sensor._id === +id;
+    });
     if (!sensor) return false;
     sensor.description = description;
     sensor.channels = channels;
-    await sensor.save();
-    return true;*/
+    return true;
   },
   deleteSensor: async (_id) => {
     const filtred = sensors.filter((sensor) => {
@@ -93,4 +120,7 @@ module.exports = {
     if (user.role === 'master') return true;
     return false;
   },
+  getUsers: async () => {
+    return users;
+  }
 };

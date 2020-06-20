@@ -15,5 +15,30 @@ export default (requestName) => {
         method: 'GET',
         url: '/user/',
       };
+    case 'addSensor':
+      return {
+        method: 'POST',
+        url: '/user/add/',
+      };
+    case 'updateSensor':
+      return {
+        method: 'PUT',
+        url: '/user/',
+      };
+    case 'deleteSensor':
+      return {
+        method: 'DELETE',
+        url: '/user/',
+      };
+    case 'getUsers':
+      return {
+        method: 'GET',
+        url: '/admin/users/',
+      };      
+    default:
+      return {
+        method: 'GET',
+        url: '/',
+      };
   }
 };

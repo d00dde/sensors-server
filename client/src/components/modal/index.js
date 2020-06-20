@@ -2,6 +2,8 @@ import React from 'react';
 import RegisterModal from './register-modal';
 import LoginModal from './login-modal';
 import AddSensorModal from './addSensor-modal';
+import UpdateSensorModal from './updateSensor-modal';
+import DeleteSensorModal from './deleteSensor-modal';
 import { useDispatch, useSelector } from 'react-redux';
 import { setModal } from '../../redux/actions';
 
@@ -33,6 +35,18 @@ export default () => {
         <AddSensorModal 
           closeModal={closeModal}
           lang={language.addSensor}
+        />);
+    case 'updateSensor':
+      return (
+        <UpdateSensorModal 
+          closeModal={closeModal}
+          lang={language.updateSensor}
+        />);
+    case 'deleteSensor':
+      return (
+        <DeleteSensorModal 
+          closeModal={closeModal}
+          lang={language.deleteSensor}
         />);
     default:
       return null;

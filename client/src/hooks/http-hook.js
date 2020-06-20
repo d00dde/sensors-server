@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setError, setLoading } from '../redux/actions';
 import getPath from './requests';
@@ -25,25 +25,29 @@ export const useHttp = () => {
     dispatch(setError(''));
     try {
       //console.log('before request', url);
-      const response = await fetch(/*'http://localhost:5000' + */ url, {
+      const response = await fetch(/*'http://localhost:5000' + */url, {
         method,
         body,
         headers,
       });
       //console.log('after request', response);
       //console.log('status', response.ok);
-      const data = await response.json();
       dispatch(setLoading(false));
       if (!response.ok) {
+        const data = await response.json();
         dispatch(setError(data.message));
         return false;
       }
+      if(response.status === 204){
+        return true;
+      }
+      const data = await response.json();
       return data;
     } catch (error) {
       console.log(error);
       dispatch(setLoading(false));
       dispatch(setError(error.message));
     }
-  }, []);
+  }, [dispatch, token]);
   return { request };
 };

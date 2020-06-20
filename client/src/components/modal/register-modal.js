@@ -39,12 +39,14 @@ export default ({ lang, closeModal }) => {
         ph={lang.emailPh}
         name="email"
         onChange={inputsHandler}
+        value={form.email}
       />
       <Input
         label={lang.name}
         ph={lang.namePh}
         name="name"
         onChange={inputsHandler}
+        value={form.name}
       />
       <Input
         label={lang.password}
@@ -52,6 +54,7 @@ export default ({ lang, closeModal }) => {
         ph={lang.passwordPh}
         name="password"
         onChange={inputsHandler}
+        value={form.password}
       />
       <Input
         label={lang.confirmPassword}
@@ -59,6 +62,7 @@ export default ({ lang, closeModal }) => {
         ph={lang.confirmPasswordPh}
         name="confirmPassword"
         onChange={inputsHandler}
+        value={form.confirmPassword}
       />
       <div className="btn" onClick={registerHandler}>
         {lang.regButton}

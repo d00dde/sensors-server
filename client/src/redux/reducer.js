@@ -7,8 +7,9 @@ const initState = () => {
     name: '',
     role: '',
     token: '',
-    users: null,
+    users: [],
     sensors: null,
+    sensor_id: 0,
     loading: false,
     error: '',
   };
@@ -28,12 +29,22 @@ export const reducer = (state = initState(), action) => {
         ...state,
         language: action.payload,
       };
+    case types.SET_SENSOR_ID:
+      return {
+        ...state,
+        sensor_id: action.payload,
+      };
     case types.SET_AUTH:
       return {
         ...state,
         name: action.payload.name,
         role: action.payload.role,
         token: action.payload.token,
+      };
+    case types.CLEAR_DATA:
+      return {
+        ... initState(),
+        language: state.language,
       };
     case types.SET_MODAL:
       return {

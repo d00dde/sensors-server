@@ -8,6 +8,11 @@ export const setAuth = (name, role, token) => {
     payload: { name, token, role },
   };
 };
+export const clearData = () => {
+  return {
+    type: types.CLEAR_DATA,
+  };
+};
 export const setError = (message) => {
   return {
     type: types.SET_ERROR,
@@ -58,5 +63,11 @@ export const setLanguage = (langName) => {
   return {
     type: types.SET_LANGUAGE,
     payload: language,
+  };
+};
+export const setSensorId = (id) => {
+  return {
+    type: types.SET_SENSOR_ID,
+    payload: id,
   };
 };

@@ -4,7 +4,7 @@ export default ({
 	label, 
 	ph, 
 	channel,
-	value, 
+	address, 
 	enabled,
 	changeHandler, 
 }) => {
@@ -13,12 +13,13 @@ export default ({
 			<input 
 				type='checkbox'
 				onChange={(e) => changeHandler('enabled', channel, e.target.checked)}
+				checked={enabled}
 			/>
 			<input className='check'
 				type='text' 
 				placeholder={ph}
-				value={value}
-				onChange={(e) => changeHandler('value', channel, e.target.value.trim())}
+				value={address}
+				onChange={(e) => changeHandler('address', channel, e.target.value.trim())}
 				disabled={!enabled}
 			/>
 			<div className='label'>{label}</div>

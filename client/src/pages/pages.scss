@@ -26,3 +26,8 @@
     @include button($altBtnColor, $pageBGColor);
   }
 }
+.users-page {
+  padding-top: 80px;
+  background-color: $pageBGColor;
+  height: calc(100vh - 80px);
+}

@@ -22,7 +22,7 @@ function App() {
     }
     dispatch(setLanguage('default'));
     setReady(true);
-  }, [login]);
+  }, [login, dispatch, storageName]);
 
   if(!ready)
     return (

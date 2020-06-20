@@ -11,4 +11,13 @@ export default {
   passwordsIsEqual: (password, confirmPassword) => {
     return password.trim() === confirmPassword.trim();
   },
+  validateDescription: (description) => {
+    return !!description.trim();
+  },
+  channelsIsNoEmpty: (channels) => {
+    return channels.some((channel) => channel.enabled);
+  },
+  channelValidAddress: (channel) => {
+    return !!channel.address.trim();
+  }
 };

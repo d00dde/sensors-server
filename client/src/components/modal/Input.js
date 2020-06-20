@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default ({ type, label, ph, name, onChange, defVal = '' }) => {
+export default ({ type, label, ph, name, onChange, value }) => {
 	if(type !== 'password')
 		type = 'text';
 	return(
@@ -10,7 +10,7 @@ export default ({ type, label, ph, name, onChange, defVal = '' }) => {
 				placeholder={ph}
 				name={name} 
 				onChange={onChange}
-				defaultValue={defVal}
+				value={value}
 			/>
 			<div className='label'>{label}</div>
 		</div>

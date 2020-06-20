@@ -1,6 +1,19 @@
-import React from 'react';
-import styled from 'styled-components';
+import React, { useEffect } from 'react';
+import Page from './page-wrapper';
+import UsersList from '../components/users-list';
+import { useDispatch } from 'react-redux';
+import { fetch, setModal } from '../redux/actions';
+import { useHttp } from '../hooks/http-hook';
 
 export default () => {
-  return <h1>Users Page</h1>;
+  const dispatch = useDispatch();
+  const { request } = useHttp();
+  useEffect(() => {
+    dispatch(fetch(request, 'users', 'getUsers', null));
+  }, [request, dispatch]);
+  return (
+    <Page className="users-page">
+    <UsersList />
+    </Page>
+  );
 };

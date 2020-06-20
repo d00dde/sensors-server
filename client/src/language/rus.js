@@ -1,3 +1,7 @@
+import constants from '../constants';
+
+const channels = constants.channelsRus;
+
 export default {
   navbar: {
     login: 'Вход',
@@ -5,6 +9,16 @@ export default {
     register: 'Регистрация',
     sensors: 'Датчики',
     users: 'Пользователи',
+  },
+  sensorsList: {
+    addBtn: 'Добавить',
+    noSensors: 'Сенсоров пока нет.',
+    updateBtn: 'Изменить',
+    deleteBtn: 'Удалить',
+  },
+  usersList: {
+    updateBtn: 'Изменить',
+    deleteBtn: 'Удалить',
   },
   register: {
     title: 'Регистрация',
@@ -36,26 +50,33 @@ export default {
       passwordNoValid: 'Пароль слишком короткий',
     },
   },
-  sensorsList: {
-    addBtn: 'Добавить',
-    noSensors: 'Сенсоров пока нет.',
-    updateBtn: 'Изменить',
-    deleteBtn: 'Удалить',
-  },
   addSensor: {
     title: 'Добавить датчик',
     description: 'Название',
     descriptionPh: 'Введите название датчика',
-    channels: {
-      telegram: {
-        title: 'Telegram',
-        placeholder: 'Введите адресс telegram',
-      },
-      viber: {
-        title: 'Viber',
-        placeholder: 'Введите адресс viber',
-      },
-    },
+    channels: channels,
     addButton: 'Добавить',
+    messages: {
+      descriptionIsEmpty: 'Название не должно быть пустым',
+      noChannels: 'Укажите хотя бы один канал связи',
+      noValidChannelAddress: 'Укажите корректный адресс',
+    },
+  },
+  updateSensor: {
+    title: 'Обновить датчик',
+    description: 'Название',
+    descriptionPh: 'Введите название датчика',
+    channels: channels,
+    updateButton: 'Сохранить',
+    messages: {
+      descriptionIsEmpty: 'Название не должно быть пустым',
+      noChannels: 'Укажите хотя бы один канал связи',
+      noValidChannelAddress: 'Укажите корректный адресс',
+    },
+  },
+  deleteSensor: {
+    title: 'Удалить датчик?',
+    yes: 'Да',
+    no: 'Нет',
   },
 };

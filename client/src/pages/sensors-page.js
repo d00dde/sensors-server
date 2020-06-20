@@ -16,7 +16,7 @@ export default () => {
   });
   useEffect(() => {
     dispatch(fetch(request, 'sensors', 'getSensors', null));
-  }, [request]);
+  }, [request, dispatch]);
 
   const addHandler = () => {
     dispatch(setModal('addSensor'));
