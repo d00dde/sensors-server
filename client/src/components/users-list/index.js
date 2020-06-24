@@ -1,6 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setModal } from '../../redux/actions';
+import { Link } from 'react-router-dom';
+import { setModal, setValue } from '../../redux/actions';
 import './users-list.scss';
 
 export default () => {
@@ -11,28 +12,29 @@ export default () => {
       language: state.language.usersList,
     };
   });
-  /* const updateHandler = (id) => {
-    dispatch(setSensorId(id));
-    dispatch(setModal('updateSensor'));
+  const clickHandler = (name) => {
+    dispatch(setValue('name', name));
+    //dispatch(setModal('updateSensor'));
   };
-  const deleteHandler = (id) => {
+  /* const deleteHandler = (id) => {
     dispatch(setSensorId(id));
     dispatch(setModal('deleteSensor'));
   }; */
-  console.log(users)
-  const usersList = users.map((user) => {
-    
-    return ( <div></div>)
-      /* <div key={_id} className="sensor-item">
-        <span>{description}</span>
-        <div className="update-btn" onClick={() => updateHandler(_id)}>
-          {language.updateBtn}
+  const usersList = users.map(({id, email, name, role}) => {
+    return (
+      <Link 
+        key={id} 
+        className="user-item" 
+        to={`sensors/${id}`} 
+        onClick={() => clickHandler(name)}
+      >
+        <div className='info'>
+          <span>{email}</span>
+          <span>{name}</span>
         </div>
-        <div className="delete-btn" onClick={() => deleteHandler(_id)}>
-          {language.deleteBtn}
-        </div>
-      </div>
-    );*/
+        <span>{role}</span>
+      </Link>
+    );
   });
-  return <div className="sensors-list">{usersList}</div>;
+  return <div className="users-list">{usersList}</div>;
 };

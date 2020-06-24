@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Modal from './modal';
 import Input from './Input';
-import CheckInput from './Check-input';
+import CheckInput from './CheckInput';
 import { useHttp } from '../../hooks/http-hook';
 import { useDispatch } from 'react-redux';
 import { fetch } from '../../redux/actions';

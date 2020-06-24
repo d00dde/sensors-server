@@ -6,13 +6,6 @@ const router = Router();
 
 router.use(adminAuth);
 
-/*const isOwner = (req, sensor) => {
-  if (req.user.userID === sensor.owner) {
-    return true;
-  }
-  return false;
-};*/
-
 router.get(
   '/users',
   catchErrors(async (req, res) => {
@@ -24,15 +17,51 @@ router.get(
   }),
 );
 
-/*router.get(
-  '/:id',
+router.get(
+  '/sensors/:id',
   catchErrors(async (req, res) => {
-    const sensor = await db.getSensor(req.params.id);
-    if (isOwner(req, sensor)) {
-      return responseHandler(!!sensor, res, sensor);
-    }
-    return responseHandler(false);
+    let sensors = await db.getAllSensors(req.params.id);
+    sensors = sensors.map(({ _id, description, channels, owner, systemID, secret }) => {
+      return { _id, description, channels, owner, systemID, secret };
+    });
+    responseHandler(true, res, sensors);
   }),
-);*/
+);
+
+router.post(
+  '/addSensor/:id',
+  catchErrors(async (req, res) => {
+    await db.addSensor(
+      req.body.description,
+      req.body.channels,
+      req.params.id,
+      req.body.systemID,
+      req.body.secret,
+    );
+    res.status(201).json({});
+  }),
+);
+
+router.put(
+  '/updateSensor/:id',
+  catchErrors(async (req, res) => {
+    const isUpdated = await db.updateSensor(
+      req.params.id,
+      req.body.description,
+      req.body.channels,
+      req.body.systemID,
+      req.body.secret,
+    );
+    responseHandler(isUpdated, res);
+  }),
+);
+
+router.delete(
+  '/deleteSensor/:id',
+  catchErrors(async (req, res) => {
+    const isDeleted = await db.deleteSensor(req.params.id);
+    responseHandler(isDeleted, res);
+  }),
+);
 
 module.exports = router;

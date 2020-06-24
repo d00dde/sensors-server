@@ -19,5 +19,11 @@ export default {
   },
   channelValidAddress: (channel) => {
     return !!channel.address.trim();
-  }
+  },
+  validateSystemID: (systemID) => {
+    return !!systemID.trim();
+  },
+  validateSecret: (secret) => {
+    return !!secret.trim();
+  },
 };

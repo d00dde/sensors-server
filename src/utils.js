@@ -5,7 +5,7 @@ module.exports = {
         // throw new Error('error add sensor');
         await fn(req, res);
       } catch (err) {
-        console.log(err.message);
+        console.error(err);
         res.status(500).json({ message: 'Ошибка сервера.' });
       }
     };
@@ -23,7 +23,7 @@ module.exports = {
     }
   },
   errorHandler: (err, res) => {
-    console.log(err.message);
+    console.error(err);
     res.status(500).json({ message: 'Ошибка сервера.' });
   },
 };

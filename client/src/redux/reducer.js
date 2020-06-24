@@ -10,6 +10,7 @@ const initState = () => {
     users: [],
     sensors: null,
     sensor_id: 0,
+    events: [],
     loading: false,
     error: '',
   };
@@ -43,7 +44,7 @@ export const reducer = (state = initState(), action) => {
       };
     case types.CLEAR_DATA:
       return {
-        ... initState(),
+        ...initState(),
         language: state.language,
       };
     case types.SET_MODAL:

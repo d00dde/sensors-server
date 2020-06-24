@@ -27,7 +27,7 @@ export const useRoutes = () => {
         <Route path="/" exact>
           <MainPage />
         </Route>
-        <Route path="/sensors">
+        <Route path="/sensors/">
           <SensorsPage />
         </Route>
         <Route path="/events/:id">
@@ -42,7 +42,10 @@ export const useRoutes = () => {
         <Route path="/" exact>
           <MainPage />
         </Route>
-        <Route path="/sensors">
+        <Route path="/sensors/" exact>
+          <SensorsPage />
+        </Route>
+        <Route path="/sensors/:id">
           <SensorsPage />
         </Route>
         <Route path="/users">
@@ -51,7 +54,7 @@ export const useRoutes = () => {
         <Route path="/events/:id">
           <EventsPage />
         </Route>
-        <Redirect to="/sensors" />
+        <Redirect to="/users" />
       </Switch>
     );
   }

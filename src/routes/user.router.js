@@ -16,15 +16,14 @@ const isOwner = (req, sensor) => {
 router.post(
   '/add',
   catchErrors(async (req, res) => {
-    const sensor = await db.addSensor(
+    await db.addSensor(
       req.body.description,
       req.body.channels,
       req.user.userID,
       'none',
       'none',
     );
-    const { _id, description, channels, owner } = sensor;
-    res.status(201).json({ _id, description, channels, owner });
+    res.status(201).json({});
   }),
 );
 
@@ -33,7 +32,7 @@ router.put(
   catchErrors(async (req, res) => {
     const sensor = await db.getSensor(req.params.id);
     if (!isOwner(req, sensor)) {
-      return responseHandler(false);
+      return responseHandler(false, res);
     }
     const isUpdated = await db.updateSensor(
       req.params.id,
@@ -49,7 +48,7 @@ router.delete(
   catchErrors(async (req, res) => {
     const sensor = await db.getSensor(req.params.id);
     if (!isOwner(req, sensor)) {
-      return responseHandler(false);
+      return responseHandler(false, res);
     }
     const isDeleted = await db.deleteSensor(req.params.id);
     responseHandler(isDeleted, res);
@@ -71,10 +70,21 @@ router.get(
   '/:id',
   catchErrors(async (req, res) => {
     const sensor = await db.getSensor(req.params.id);
-    if (isOwner(req, sensor)) {
-      return responseHandler(!!sensor, res, sensor);
+    if (!isOwner(req, sensor)) {
+      return responseHandler(false, res);
     }
-    return responseHandler(false);
+    return responseHandler(true, res, sensor);
+  }),
+);
+
+router.get(
+  '/events/:id',
+  catchErrors(async (req, res) => {
+    const sensor = await db.getSensor(req.params.id);
+    if (!isOwner(req, sensor)) {
+      return responseHandler(false, res);
+    }
+    return responseHandler(true, res, sensor.events);
   }),
 );
 

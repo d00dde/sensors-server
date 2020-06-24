@@ -23,9 +23,10 @@ let sensors = [
     channels: [
       {channel: 'telegram', address: '@D00dde1'}
     ],
-    systemID: 42,
+    systemID: '42',
     secret: '42',
     owner: 1,
+    events: [ 'lol', 'pop', 'tic'],
   },
   {
     _id: 2,
@@ -33,7 +34,7 @@ let sensors = [
     channels: [
       {channel: 'viber', address: '+380972074557'}
     ],
-    systemID: 42,
+    systemID: '42',
     secret: '42',
     owner: 1,
   },
@@ -41,7 +42,7 @@ let sensors = [
     _id: 3,
     description: 'LOL_SENSOR',
     channels: [],
-    systemID: 42,
+    systemID: '42',
     secret: '42',
     owner: 2,
   },
@@ -58,12 +59,12 @@ module.exports = {
     // throw new Error('ups');
     return Promise.resolve(user);
   },
-  createUser: (email, name, hashedPassword) => {
+  createUser: (email, name, hashedPassword, role) => {
     const user = {
       id: ++max_user_id,
       email,
       name,
-      role: 'user',
+      role,
       password: hashedPassword,
       sensors: [],
     };
@@ -77,27 +78,33 @@ module.exports = {
   },
   getAllSensors: (userID) => {
     const find = sensors.filter((sensor) => {
-      return sensor.owner === userID;
+      return +sensor.owner === +userID;
     });
     return Promise.resolve(find);
   },
-  addSensor: async (description, channels, userID) => {
+  addSensor: async (description, channels, userID, systemID, secret) => {
     const sensor = {
       _id: ++max_sensor_id,
       description,
       channels,
-      owner: userID,
+      systemID, 
+      secret,
+      owner: +userID,
     };
     sensors.push(sensor);
     return sensor;
   },
-  updateSensor: async (id, description, channels) => {
+  updateSensor: async (id, description, channels, systemID, secret) => {
     const sensor = sensors.find((sensor) => {
       return +sensor._id === +id;
     });
     if (!sensor) return false;
     sensor.description = description;
     sensor.channels = channels;
+    if(systemID && secret){
+      sensor.systemID = systemID;
+      sensor.secret = secret;
+    }
     return true;
   },
   deleteSensor: async (_id) => {

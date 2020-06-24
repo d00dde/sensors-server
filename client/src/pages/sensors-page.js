@@ -2,12 +2,16 @@ import React, { useEffect } from 'react';
 import Page from './page-wrapper';
 import SensorsList from '../components/sensors-list';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetch, setModal } from '../redux/actions';
+import { useParams } from 'react-router-dom';
+import { fetch, setModal, setValue } from '../redux/actions';
 import { useHttp } from '../hooks/http-hook';
+import { useAuth } from '../hooks/auth-hook';
 
 export default () => {
   const dispatch = useDispatch();
   const { request } = useHttp();
+  const userId = useParams().id;
+  const { getName } = useAuth();
   const { userName, language } = useSelector((state) => {
     return {
       userName: state.name,
@@ -15,11 +19,20 @@ export default () => {
     };
   });
   useEffect(() => {
-    dispatch(fetch(request, 'sensors', 'getSensors', null));
-  }, [request, dispatch]);
+    if(userId) {
+      dispatch(fetch(request, 'sensors', 'getSensorsAdmin', null, userId));
+    } else {
+      dispatch(setValue('name', getName()));
+      dispatch(fetch(request, 'sensors', 'getSensors')); 
+    }
+  }, [request, dispatch, getName, userId]);
 
   const addHandler = () => {
-    dispatch(setModal('addSensor'));
+    if(userId) {
+      dispatch(setModal('addSensorAdmin'));
+    } else {
+      dispatch(setModal('addSensor'));
+    }
   };
 
   return (
@@ -30,7 +43,7 @@ export default () => {
           {language.addBtn}
         </div>
       </div>
-      <SensorsList />
+      <SensorsList userId={userId}/>
     </Page>
   );
 };

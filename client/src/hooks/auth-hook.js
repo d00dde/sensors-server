@@ -21,6 +21,12 @@ export const useAuth = () => {
     dispatch(clearData());
     localStorage.removeItem(storageName);
   }, [dispatch]);
+  const getName = useCallback(() => {
+    const data = JSON.parse(localStorage.getItem(storageName));
+    if(!data)
+      return false;
+    return data.name;
+  }, []);
 
-  return { login, logout, storageName };
+  return { login, logout, storageName, getName };
 };

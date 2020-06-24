@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import Page from './page-wrapper';
 import UsersList from '../components/users-list';
 import { useDispatch } from 'react-redux';
-import { fetch, setModal } from '../redux/actions';
+import { fetch } from '../redux/actions';
 import { useHttp } from '../hooks/http-hook';
 
 export default () => {

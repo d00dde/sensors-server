@@ -24,7 +24,7 @@ export default ({ lang, closeModal }) => {
       return;
     }
     if (await loginReq(request, login, form)) {
-      history.push('/sensors');
+      history.push('/login');
       closeModal();
     }
   };
