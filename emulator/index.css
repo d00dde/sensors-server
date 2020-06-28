@@ -1,0 +1,19 @@
+body {
+	height: 100vh;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+label{
+	font-size: 1.3rem;
+	margin-top: 15px;
+}
+input{
+	font-size: 1.3rem;
+}
+button{
+	margin: 25px;
+	font-size: 1.3rem;
+	cursor: pointer;
+}

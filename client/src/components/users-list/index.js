@@ -6,34 +6,56 @@ import './users-list.scss';
 
 export default () => {
   const dispatch = useDispatch();
-  const { users, language } = useSelector((state) => {
+  const { users, userRole, language } = useSelector((state) => {
     return {
       users: state.users,
+      userRole: state.role,
       language: state.language.usersList,
     };
   });
   const clickHandler = (name) => {
     dispatch(setValue('name', name));
-    //dispatch(setModal('updateSensor'));
   };
-  /* const deleteHandler = (id) => {
-    dispatch(setSensorId(id));
-    dispatch(setModal('deleteSensor'));
-  }; */
-  const usersList = users.map(({id, email, name, role}) => {
+  const modalHandler = (id, modalName, role = '') => {
+    dispatch(setValue('user_id', id));
+    if(role)
+      dispatch(setValue('user_role', role));
+    dispatch(setModal(modalName));
+  };
+
+  const showButtons = (id, role) => (
+    <>
+      <div className="change-btn" onClick={() => modalHandler(id, 'setRights', role)}>
+        {language.setRights}
+      </div>
+      <div className="delete-btn" onClick={() => modalHandler(id, 'deleteUser')}>
+        {language.deleteBtn}
+      </div>
+    </>
+  );
+  const usersList = users && users.map(({id, email, name, role}) => {
     return (
-      <Link 
-        key={id} 
-        className="user-item" 
-        to={`sensors/${id}`} 
-        onClick={() => clickHandler(name)}
-      >
-        <div className='info'>
-          <span>{email}</span>
-          <span>{name}</span>
-        </div>
-        <span>{role}</span>
-      </Link>
+      <div key={id} className="user-item">
+        <Link to={`sensors/${id}`} onClick={() => clickHandler(name)}>
+          <table className='info'>
+            <tbody>
+              <tr>
+                <td>{language.email}:</td>
+                <td>{email}</td>
+              </tr>
+              <tr>
+                <td>{language.name}:</td>
+                <td>{name}</td>
+              </tr>
+              <tr>
+                <td>{language.role}:</td>
+                <td>{role}</td>
+              </tr>
+            </tbody>
+          </table>
+        </Link>
+        {role !== 'master' && userRole === 'master' ? showButtons(id, role) : null}
+      </div>
     );
   });
   return <div className="users-list">{usersList}</div>;

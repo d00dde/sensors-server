@@ -14,18 +14,25 @@
     border-radius: 10px;
     background-color: $hoverColor;
     transition: background-color .3s;
-    cursor: pointer;
-    text-decoration: none;
-    color: #000;
+
     &:hover {
       background-color: $pageBGColor;
-      
+    }
+    a{
+      cursor: pointer;
+      text-decoration: none;
+      flex-grow: 1;
+      color: $textColor;
     }
     .info{
-      display: block;
+      border-spacing: 1em 0.2em;
     }
-    span {
-      flex-grow: 1;
+    .change-btn {
+      @include button($buttonColor, $pageBGColor);
+      margin: 0 5px;
+    }
+    .delete-btn {
+      @include button($dangerColor, $pageBGColor);
     }
   }
 }

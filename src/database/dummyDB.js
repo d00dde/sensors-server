@@ -1,52 +1,4 @@
-let max_user_id = 2;
-let max_sensor_id = 3;
-const users = [
-  {
-    id: 1,
-    email: 'd48564@gmail.com',
-    name: 'John',
-    role: 'master',
-    password: '$2a$10$DhQAmnU6E4RcwgB/LkN3f.yBdaFZCsOEcl.SIjZnxiDhP5dHib/zK',
-  },
-    {
-    id: 2,
-    email: 'd48564@gmail.con',
-    name: 'Bob',
-    role: 'user',
-    password: '$2a$10$DhQAmnU6E4RcwgB/LkN3f.yBdaFZCsOEcl.SIjZnxiDhP5dHib/zK',
-  },
-];
-let sensors = [
-  {
-    _id: 1,
-    description: 'TELEG_SENSOR',
-    channels: [
-      {channel: 'telegram', address: '@D00dde1'}
-    ],
-    systemID: '42',
-    secret: '42',
-    owner: 1,
-    events: [ 'lol', 'pop', 'tic'],
-  },
-  {
-    _id: 2,
-    description: 'VIBER_SENSOR',
-    channels: [
-      {channel: 'viber', address: '+380972074557'}
-    ],
-    systemID: '42',
-    secret: '42',
-    owner: 1,
-  },
-  {
-    _id: 3,
-    description: 'LOL_SENSOR',
-    channels: [],
-    systemID: '42',
-    secret: '42',
-    owner: 2,
-  },
-];
+let {  max_user_id, max_sensor_id, users, sensors } = require('./dummyData');
 
 module.exports = {
   init: () => {
@@ -129,5 +81,46 @@ module.exports = {
   },
   getUsers: async () => {
     return users;
-  }
+  },
+  deleteUser: async (id) => {
+    const user = users.find((user) => +user.id === +id)
+    if(user.role === 'master')
+      return false;
+    const filtred = users.filter((user) => {
+      return +user.id !== +id;
+    });
+    if (filtred.length === users.length) return false;
+    users = filtred;
+    sensors = sensors.filter((sensor) => {
+      return +sensor.owner !== +id;
+    });
+    return true;
+  },
+  getUser: async (id) => {
+    return users.find((user) => +user.id === +id) 
+  },
+  changeRole: (id, role) => {
+    const user = users.find((user) => +user.id === +id);
+    if(!user)
+      return false;
+    user.role = role;
+    return true;
+  },
+  getSensorBySystemId: async (systemID) => {
+    const find = sensors.find((sensor) => {
+      return sensor.systemID === systemID;
+    });
+    return Promise.resolve(find);
+  },
+  addEvent: (sensorId, code, message) => {
+    const sensor = sensors.find((sensor) => sensor.systemID === sensorId);
+    if(!sensor)
+      return false;
+    sensor.events.push({
+      code,
+      message,
+      date: +new Date(),
+    });
+    return true;
+  },
 };

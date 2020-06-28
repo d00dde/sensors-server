@@ -3,7 +3,7 @@ import Page from './page-wrapper';
 import EventsList from '../components/events-list';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { fetch } from '../redux/actions';
+import { fetch, setValue } from '../redux/actions';
 import { useHttp } from '../hooks/http-hook';
 
 export default () => {
@@ -13,10 +13,13 @@ export default () => {
   const sensorId = useParams().id;
   useEffect(() => {
   	if(role === 'user') {
-  		dispatch(fetch(request, 'events', 'getEvents', null, sensorId));
+  		dispatch(fetch(request, 'sensor', 'getSensor', null, sensorId));
   	} else {
-  		dispatch(fetch(request, 'events', 'getEventsAdmin', null, sensorId));
+  		dispatch(fetch(request, 'sensor', 'getSensorAdmin', null, sensorId));
   	}
+    return () => {
+      dispatch(setValue('sensor', null));
+    }
   }, [request, dispatch, sensorId, role]);
   return (
     <Page className="users-page">

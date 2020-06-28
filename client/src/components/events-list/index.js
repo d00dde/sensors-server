@@ -1,50 +1,73 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { setModal, setValue } from '../../redux/actions';
+import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import './sensors-list.scss';
 
+const UP_ARROW = 8743;
+const DOWN_ARROW = 8744;
+
 export default ({ userId }) => {
-  const dispatch = useDispatch();
-  const { sensors, language } = useSelector((state) => {
+  const { sensor, language } = useSelector((state) => {
     return {
-      sensors: state.sensors,
-      language: state.language.sensorsList,
+      sensor: state.sensor,
+      language: state.language.eventsList,
     };
   });
-  const updateHandler = (id) => {
-    dispatch(setValue('sensor_id', id));
-    if(userId) {
-      dispatch(setModal('updateSensorAdmin'));
-    } else {
-      dispatch(setModal('updateSensor'));
-    }
-  };
-  const deleteHandler = (id) => {
-    dispatch(setValue('sensor_id', id));
-    if(userId) {
-      dispatch(setModal('deleteSensorAdmin'));
-    } else {
-      dispatch(setModal('deleteSensor'));
-    }
-  };
-  const sensorsList =
-    sensors && sensors.length ? (
-      sensors.map(({ _id, description, channels }) => {
-        return (
-          <div key={_id} className="sensor-item">
-            <Link to={`/events/${_id}`}>{description}</Link>
-            <div className="update-btn" onClick={() => updateHandler(_id)}>
-              {language.updateBtn}
-            </div>
-            <div className="delete-btn" onClick={() => deleteHandler(_id)}>
-              {language.deleteBtn}
-            </div>
-          </div>
-        );
-      })
-    ) : (
-      <div className="no-sensors">{language.noSensors}</div>
+  const [ codeSort, setCodeSort ] = useState(DOWN_ARROW);
+  const [ dateSort, setDateSort ] = useState(DOWN_ARROW);
+  const [ sorted, setSorted ] = useState(null);
+  useEffect(() => {
+    setSorted(sensor && sensor.events);
+  }, [sensor]);
+  if(!sensor)
+    return null;
+  if(!sensor.events || !sensor.events.length)
+    return <h2>{language.noEvents}</h2>
+
+  const sortCode = () => {
+    setCodeSort(codeSort === DOWN_ARROW ? UP_ARROW : DOWN_ARROW);
+    setSorted(sensor.events.sort((a, b) => codeSort === DOWN_ARROW ? b.code - a.code : a.code - b.code));
+  }
+  const sortDate = () => {
+    setDateSort(dateSort === DOWN_ARROW ? UP_ARROW : DOWN_ARROW);
+    setSorted(sensor.events.sort((a, b) => dateSort === DOWN_ARROW ? b.date - a.date : a.date - b.date));
+  }
+
+  const eventsList = sorted && sorted.map(({ code, message, date }) => {
+    return (
+      <tr key={date}>
+        <td>{code}</td>
+        <td>{message}</td>
+        <td>{formatDate(date)}</td>
+      </tr>
     );
-  return <div className="sensors-list">{sensorsList}</div>;
+  });
+  return (
+    <table className="events-list">
+      <caption>{language.events} {sensor.description}</caption>
+      <thead>
+        <tr>
+          <th>{language.code}<span onClick={sortCode}>{String.fromCharCode(codeSort)}</span></th>
+          <th>{language.message}</th>
+          <th>{language.date}<span onClick={sortDate}>{String.fromCharCode(dateSort)}</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        {eventsList}
+      </tbody>
+    </table>
+  );
 };
+
+function formatDate (milis) {
+  const date = new Date(milis);
+  const options = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    timezone: 'UTC',
+    hour: 'numeric',
+    minute: 'numeric',
+    second: 'numeric'
+  };
+  return date.toLocaleString("ru", options);
+}

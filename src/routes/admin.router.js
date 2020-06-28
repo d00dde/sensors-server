@@ -64,4 +64,19 @@ router.delete(
   }),
 );
 
+router.get(
+  '/sensor/:id',
+  catchErrors(async (req, res) => {
+    let sensor = await db.getSensor(req.params.id);
+    if(!sensor)
+      return responseHandler(false, res);
+    sensor = {
+      id: sensor._id,
+      description: sensor.description,
+      events: sensor.events,
+    };
+    return responseHandler(true, res, sensor);
+  }),
+);
+
 module.exports = router;

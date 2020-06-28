@@ -12,8 +12,8 @@ export default ({ lang, closeModal }) => {
   const deleteHandler = async () => {
     if (await delReq(id, request)) {
       dispatch(fetch(request, 'sensors', 'getSensors', null));
-      closeModal();
     }
+    closeModal();
   };
 
   return (

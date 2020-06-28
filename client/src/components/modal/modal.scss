@@ -84,7 +84,7 @@
     border-radius: 5px;
   }
   .buttons {
-    min-width: 300px;
+    min-width: 400px;
     margin: 30px;
     display: flex;
     justify-content: space-around;
@@ -95,6 +95,10 @@
     }
     .btn-cancel {
       @include button($altBtnColor, $modalBg);
+      min-width: 100px;
+    }
+    .btn-set {
+      @include button($buttonColor, $modalBg);
       min-width: 100px;
     }
   }

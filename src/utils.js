@@ -19,7 +19,7 @@ module.exports = {
         res.status(204).json({});
       }
     } else {
-      res.status(404).json({ message: 'Такого датчика не существует.' });
+      res.status(404).json({ message: 'Ошибка запроса' });
     }
   },
   errorHandler: (err, res) => {

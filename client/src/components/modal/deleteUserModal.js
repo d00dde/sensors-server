@@ -2,18 +2,16 @@ import React from 'react';
 import Modal from './modal';
 import { useHttp } from '../../hooks/http-hook';
 import { useSelector, useDispatch } from 'react-redux';
-import { useLocation } from 'react-router-dom';
 import { fetch } from '../../redux/actions';
 
 export default ({ lang, closeModal }) => {
   const { request } = useHttp();
   const dispatch = useDispatch();
-  const id = useSelector(({ sensor_id }) => sensor_id);
-  const userId = useLocation().pathname.split('/').pop();
+  const id = useSelector(({ user_id }) => user_id);
 
   const deleteHandler = async () => {
     if (await delReq(id, request)) {
-      dispatch(fetch(request, 'sensors', 'getSensorsAdmin', null, userId));
+      dispatch(fetch(request, 'users', 'getUsers', null));
     }
     closeModal();
   };
@@ -44,7 +42,7 @@ export default ({ lang, closeModal }) => {
 };
 
 async function delReq(id, request) {
-  const resp = await request('deleteSensorAdmin', { }, id);
+  const resp = await request('deleteUser', { }, id);
   if (!resp) {
     return false;
   }

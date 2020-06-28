@@ -35,6 +35,7 @@ export const useHttp = () => {
       dispatch(setLoading(false));
       if (!response.ok) {
         const data = await response.json();
+        dispatch(setLoading(false));
         dispatch(setError(data.message));
         return false;
       }

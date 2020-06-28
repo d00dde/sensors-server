@@ -7,6 +7,8 @@ import UpdateSensorModal from './updateSensorModal';
 import UpdateSensorAdminModal from './updateSensorAdminModal';
 import DeleteSensorModal from './deleteSensorModal';
 import DeleteSensorAdminModal from './deleteSensorAdminModal';
+import DeleteUserModal from './deleteUserModal';
+import SetRightsModal from './setRightsModal';
 import { useDispatch, useSelector } from 'react-redux';
 import { setModal } from '../../redux/actions';
 
@@ -68,6 +70,18 @@ export default () => {
         <DeleteSensorAdminModal 
           closeModal={closeModal}
           lang={language.deleteSensor}
+        />);
+    case 'deleteUser':
+      return (
+        <DeleteUserModal 
+          closeModal={closeModal}
+          lang={language.deleteUser}
+        />);
+    case 'setRights':
+      return (
+        <SetRightsModal 
+          closeModal={closeModal}
+          lang={language.setRights}
         />);
     default:
       return null;

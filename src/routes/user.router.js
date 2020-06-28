@@ -67,24 +67,17 @@ router.get(
 );
 
 router.get(
-  '/:id',
+  '/sensor/:id',
   catchErrors(async (req, res) => {
-    const sensor = await db.getSensor(req.params.id);
-    if (!isOwner(req, sensor)) {
+    let sensor = await db.getSensor(req.params.id);
+    if(!sensor || !isOwner(req, sensor))
       return responseHandler(false, res);
-    }
+    sensor = {
+      id: sensor._id,
+      description: sensor.description,
+      events: sensor.events,
+    };
     return responseHandler(true, res, sensor);
-  }),
-);
-
-router.get(
-  '/events/:id',
-  catchErrors(async (req, res) => {
-    const sensor = await db.getSensor(req.params.id);
-    if (!isOwner(req, sensor)) {
-      return responseHandler(false, res);
-    }
-    return responseHandler(true, res, sensor.events);
   }),
 );
 

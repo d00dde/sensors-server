@@ -10,16 +10,27 @@ export default {
     sensors: 'Датчики',
     users: 'Пользователи',
   },
+  usersList: {
+    email: 'Email',
+    name: 'Имя',
+    role: 'Права',
+    setRights: 'Изменить права доступа',
+    deleteBtn: 'Удалить',
+  },
   sensorsList: {
     addBtn: 'Добавить',
     noSensors: 'Сенсоров пока нет.',
     updateBtn: 'Изменить',
     deleteBtn: 'Удалить',
   },
-  usersList: {
-    updateBtn: 'Изменить',
-    deleteBtn: 'Удалить',
+  eventsList: {
+    noEvents: 'У этого датчика нет событий',
+    events: 'События',
+    code: 'Код события',
+    message: 'Сообщение',
+    date: 'Дата и время',
   },
+
   register: {
     title: 'Регистрация',
     email: 'Email',
@@ -90,5 +101,16 @@ export default {
     title: 'Удалить датчик?',
     yes: 'Да',
     no: 'Нет',
+  },
+  deleteUser: {
+    title: 'Удалить пользователя?',
+    yes: 'Да',
+    no: 'Нет',
+  },
+  setRights: {
+    title: 'Установить права пользователю.',
+    setAdmin: 'Назначить админом',
+    setUser: 'Назначить пользователем',
+    cancel: 'Отмена',
   },
 };

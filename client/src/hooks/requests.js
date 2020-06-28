@@ -17,10 +17,10 @@ export default (requestName) => {
         method: 'GET',
         url: '/user/',
       };
-    case 'getEvents':
+    case 'getSensor':
       return {
         method: 'GET',
-        url: '/user/events/',
+        url: '/user/sensor/',
       };
     case 'addSensor':
       return {
@@ -48,10 +48,10 @@ export default (requestName) => {
         method: 'GET',
         url: '/admin/sensors/',
       };
-    case 'getEventsAdmin':
+    case 'getSensorAdmin':
       return {
         method: 'GET',
-        url: '/admin/events/',
+        url: '/admin/sensor/',
       };
     case 'addSensorAdmin':
       return {
@@ -67,7 +67,17 @@ export default (requestName) => {
       return {
         method: 'DELETE',
         url: '/admin/deleteSensor/',
-      };        
+      }; 
+    case 'setRights':
+      return {
+        method: 'PUT',
+        url: '/master/setRights/',
+      };    
+    case 'deleteUser':
+      return {
+        method: 'DELETE',
+        url: '/master/deleteUser/',
+      };    
     default:
       return {
         method: 'GET',

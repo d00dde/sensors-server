@@ -9,7 +9,7 @@ const schema = new Schema({
       address: { type: String, required: true },
     },
   ],
-  systemID: { type: String, required: true },
+  systemID: { type: String, required: true, unique: true },
   secret: { type: String, required: true },
   events: [Event],
   owner: { type: Types.ObjectId, ref: 'User' },

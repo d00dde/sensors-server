@@ -10,7 +10,9 @@ const initState = () => {
     users: [],
     sensors: null,
     sensor_id: 0,
-    events: [],
+    user_id: 0,
+    user_role: '',
+    sensor: null,
     loading: false,
     error: '',
   };

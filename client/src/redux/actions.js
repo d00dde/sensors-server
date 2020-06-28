@@ -65,12 +65,6 @@ export const setLanguage = (langName) => {
     payload: language,
   };
 };
-/*export const setSensorId = (id) => {
-  return {
-    type: types.SET_SENSOR_ID,
-    payload: id,
-  };
-};*/
 export const setValue = (fieldName, value) => {
   return {
     type: types.SET_DATA,
