@@ -24,9 +24,9 @@
 
 ---
 
-####:wrench: Используются технологии:
+#### :wrench: Используются технологии:
 
-#####Backend
+##### Backend
 
 - node.js;
 - express;
@@ -35,6 +35,6 @@
 - telegram API;
 - native JS.
 
-#####Frontend
+##### Frontend
 
 - React JS.
